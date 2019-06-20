@@ -75,7 +75,7 @@
         <module>iorek-api</module>
         <module>iorek-service</module>
         <module>iorek-external-services</module>
-        <!--module>iorek-packaging</module-->
+        <module>iorek-packaging</module>
     </modules>
 
     <properties>
@@ -138,9 +138,6 @@
         <!-- Sonar -->
         <maven.build.timestamp.format>MM.yyyy</maven.build.timestamp.format>
         <yearMonth>${maven.build.timestamp}</yearMonth>
-        <!--<sonar.projectKey>firefly-all</sonar.projectKey>-->
-        <!--<sonar.projectName>Firefly All</sonar.projectName>-->
-        <!--<sonar.projectVersion>${yearMonth}</sonar.projectVersion>-->
         <sonar.language>java</sonar.language>
         <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -555,7 +552,7 @@
                             ${surefire.argLine} -Xmx1024m -Xms1024m --illegal-access=permit
                             -Djdk.net.URLClassPath.disableClassPathURLCheck=true
                         </argLine>
-                        <failIfNoTests>true</failIfNoTests>
+                        <failIfNoTests>false</failIfNoTests>
                         <includes>
                             <include>**/*Test*.java</include>
                         </includes>
@@ -687,6 +684,20 @@
                             <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
                         </buildArgs>
                     </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                                <goal>build-info</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
 
                 <plugin>
