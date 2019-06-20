@@ -18,7 +18,7 @@
     <inceptionYear>2019</inceptionYear>
     <description>
         Microservice for interacting with Breach Information Services in order to determine if a user has had their
-        email appear in a breach or if a proposed password appears in a breach
+        email appear in a breach or if a proposed password appears in a known data set of pwned passwords
     </description>
 
     <developers>
@@ -75,31 +75,35 @@
         <module>iorek-api</module>
         <module>iorek-service</module>
         <module>iorek-external-services</module>
-        <module>iorek-packaging</module>
+        <!--module>iorek-packaging</module-->
     </modules>
 
     <properties>
 
         <!-- Compiler Options -->
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.release>11</maven.compiler.release>
 
         <!-- Dependency Versioning -->
-        <apache.httpcore.version>4.4.6</apache.httpcore.version>
-        <apache.httpclient.version>4.5.3</apache.httpclient.version>
-        <apache.commons.lang3.version>3.9</apache.commons.lang3.version>
+        <bytebuddy.version>1.9.7</bytebuddy.version>
+        <commons-codec.version>1.10</commons-codec.version>
         <feign.version>10.2.3</feign.version>
+        <feign-annotation-error-decoder.version>1.2.0</feign-annotation-error-decoder.version>
         <findbugs.version>3.0.0</findbugs.version>
         <hamcrest.version>1.3</hamcrest.version>
         <jackson.version>2.9.9</jackson.version>
         <joda.version>2.9.9</joda.version>
-        <junit.jupiter.version>5.2.0</junit.jupiter.version>
-        <junit.platform.version>1.1.0</junit.platform.version>
+        <junit.jupiter.version>5.4.2</junit.jupiter.version>
+        <junit.platform.version>1.2.0</junit.platform.version>
         <log4j.version>2.8.2</log4j.version>
-        <lombok.version>1.16.8</lombok.version>
+        <lombok.version>1.18.8</lombok.version>
+        <meanbean.version>2.0.3</meanbean.version>
         <mockito.version>2.28.2</mockito.version>
+        <mapstruct.version>1.3.0.Final</mapstruct.version>
         <retrofit.version>2.5.0</retrofit.version>
         <okhttp.version>3.12.1</okhttp.version>
+        <skyscreamer.version>1.5.0</skyscreamer.version>
         <slf4j.version>1.7.25</slf4j.version>
         <spring.framework.version>5.0.12.RELEASE</spring.framework.version>
         <spring-boot.version>2.0.8.RELEASE</spring-boot.version>
@@ -107,7 +111,25 @@
         <swagger.version>1.5.15</swagger.version>
 
         <!-- Plugin Versioning -->
-        <jacoco.version>0.7.9</jacoco.version>
+        <maven-compiler.version>3.8.1</maven-compiler.version>
+        <maven-assembler.version>3.1.1</maven-assembler.version>
+        <maven-clean.version>3.1.0</maven-clean.version>
+        <maven-deploy.version>3.0.0-M1</maven-deploy.version>
+        <maven-enforcer.version>3.0.0-M2</maven-enforcer.version>
+        <maven.version>3.3.9</maven.version>
+        <maven-failsafe.version>2.22.2</maven-failsafe.version>
+        <maven-install.version>3.0.0-M1</maven-install.version>
+        <maven-jar.version>3.1.2</maven-jar.version>
+        <maven-resources.version>3.1.0</maven-resources.version>
+        <maven-site.version>3.7.1</maven-site.version>
+        <maven-surefire.version>2.22.2</maven-surefire.version>
+        <spotify-dockerfile.version>1.4.10</spotify-dockerfile.version>
+        <spotbugs.version>3.1.12</spotbugs.version>
+        <jacoco.version>0.8.4</jacoco.version>
+        <pitmp.version>1.3.7</pitmp.version>
+        <pit-junit5.version>0.7</pit-junit5.version>
+        <owasp.version>5.0.0</owasp.version>
+        <versions.version>2.7</versions.version>
 
         <!-- Encoding Output -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -146,15 +168,15 @@
         <dependencies>
 
             <dependency>
-                <groupId>commons-codec</groupId>
-                <artifactId>commons-codec</artifactId>
-                <version>1.10</version>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy</artifactId>
+                <version>${bytebuddy.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.apache.commons.lang3</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${apache.commons.lang3.version}</version>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
             </dependency>
 
             <dependency>
@@ -181,7 +203,6 @@
                 <version>${feign.version}</version>
             </dependency>
 
-
             <dependency>
                 <groupId>io.github.openfeign</groupId>
                 <artifactId>feign-slf4j</artifactId>
@@ -191,25 +212,7 @@
             <dependency>
                 <groupId>io.github.openfeign</groupId>
                 <artifactId>feign-annotation-error-decoder</artifactId>
-                <version>1.2.0</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-annotations</artifactId>
-                <version>${jackson.version}</version>
+                <version>${feign-annotation-error-decoder.version}</version>
             </dependency>
 
             <dependency>
@@ -259,12 +262,6 @@
 
             <dependency>
                 <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>${springfox.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.springfox</groupId>
                 <artifactId>springfox-spi</artifactId>
                 <version>${springfox.version}</version>
             </dependency>
@@ -282,22 +279,21 @@
             </dependency>
 
             <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-core</artifactId>
+                <version>${springfox.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-annotations</artifactId>
                 <version>${swagger.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-jaxrs</artifactId>
-                <version>${swagger.version}</version>
-
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.ws.rs</groupId>
-                        <artifactId>jsr311-api</artifactId>
-                    </exclusion>
-                </exclusions>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
             </dependency>
 
             <!-- Test Dependencies -->
@@ -332,7 +328,7 @@
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-migrationsupport</artifactId>
-                <version>RELEASE</version>
+                <version>${junit.jupiter.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -346,14 +342,14 @@
             <dependency>
                 <groupId>org.meanbean</groupId>
                 <artifactId>meanbean</artifactId>
-                <version>2.0.3</version>
+                <version>${meanbean.version}</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
-                <groupId>nl.jqno.equalsverifier</groupId>
-                <artifactId>equalsverifier</artifactId>
-                <version>2.4.3</version>
+                <groupId>org.skyscreamer</groupId>
+                <artifactId>jsonassert</artifactId>
+                <version>${skyscreamer.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -384,10 +380,11 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.0</version>
+                    <version>${maven-compiler.version}</version>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                        <release>${maven.compiler.release}</release>
                         <showWarnings>true</showWarnings>
                         <compilerArgs>
                             <arg>-Xlint</arg>
@@ -399,119 +396,47 @@
                 </plugin>
 
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${maven-assembler.version}</version>
                 </plugin>
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.6</version>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${maven-clean.version}</version>
                 </plugin>
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.0.2</version>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven-deploy.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${maven-enforcer.version}</version>
                     <executions>
                         <execution>
-                            <id>copy-dependencies</id>
-                            <phase>prepare-package</phase>
+                            <id>enforce-maven</id>
                             <goals>
-                                <goal>copy-dependencies</goal>
+                                <goal>enforce</goal>
                             </goals>
                             <configuration>
-                                <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                                <rules>
+                                    <requireMavenVersion>
+                                        <version>${maven.version}</version>
+                                    </requireMavenVersion>
+                                </rules>
                             </configuration>
                         </execution>
                     </executions>
                 </plugin>
-
-                <plugin>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.3.1</version>
-                    <executions>
-                        <execution>
-                            <id>default-jar</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                            <configuration>
-                                <archive>
-                                    <manifest>
-                                        <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                                        <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                                    </manifest>
-                                </archive>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-
-                <plugin>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.22.1</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.junit.platform</groupId>
-                            <artifactId>junit-platform-surefire-provider</artifactId>
-                            <version>${junit.platform.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.junit.jupiter</groupId>
-                            <artifactId>junit-jupiter-engine</artifactId>
-                            <version>${junit.jupiter.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.slf4j</groupId>
-                            <artifactId>slf4j-api</artifactId>
-                            <version>${slf4j.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.slf4j</groupId>
-                            <artifactId>jcl-over-slf4j</artifactId>
-                            <version>${slf4j.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.slf4j</groupId>
-                            <artifactId>slf4j-jdk14</artifactId>
-                            <version>${slf4j.version}</version>
-                        </dependency>
-                    </dependencies>
-                    <configuration>
-                        <argLine>
-                            ${surefire.argLine} -Xmx1024m -Xms1024m -Djdk.net.URLClassPath.disableClassPathURLCheck=true
-                        </argLine>
-                        <!-- TODO Reinstate me-->
-                        <failIfNoTests>false</failIfNoTests>
-                        <includes>
-                            <include>**/*Test*.java</include>
-                        </includes>
-                    </configuration>
-                </plugin>
-
-                <!--plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>2.11</version>
-                    <configuration>
-                        <outputDirectory>
-                            ${project.build.directory}/surefire-reports
-                        </outputDirectory>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <phase>test</phase>
-                            <goals>
-                                <goal>report</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin-->
 
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>2.19.1</version>
+                    <version>${maven-failsafe.version}</version>
                     <dependencies>
                         <dependency>
                             <groupId>org.junit.platform</groupId>
@@ -549,10 +474,142 @@
                     </executions>
                     <configuration>
                         <argLine>
-                            ${failsafe.argLine} -Xmx1024m -Xms1024m -Djdk.net.URLClassPath.disableClassPathURLCheck=true
+                            ${failsafe.argLine} -Xmx1024m -Xms1024m --illegal-access=permit
+                            -Djdk.net.URLClassPath.disableClassPathURLCheck=true
                         </argLine>
                     </configuration>
                 </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${maven-install.version}</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar.version}</version>
+                    <executions>
+                        <execution>
+                            <id>default-jar</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                            <configuration>
+                                <archive>
+                                    <manifest>
+                                        <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                        <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                                    </manifest>
+                                </archive>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-resources.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${maven-site.version}</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.junit.platform</groupId>
+                            <artifactId>junit-platform-surefire-provider</artifactId>
+                            <version>${junit.platform.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.junit.jupiter</groupId>
+                            <artifactId>junit-jupiter-engine</artifactId>
+                            <version>${junit.jupiter.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>slf4j-api</artifactId>
+                            <version>${slf4j.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>jcl-over-slf4j</artifactId>
+                            <version>${slf4j.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>slf4j-jdk14</artifactId>
+                            <version>${slf4j.version}</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <argLine>
+                            ${surefire.argLine} -Xmx1024m -Xms1024m --illegal-access=permit
+                            -Djdk.net.URLClassPath.disableClassPathURLCheck=true
+                        </argLine>
+                        <failIfNoTests>true</failIfNoTests>
+                        <includes>
+                            <include>**/*Test*.java</include>
+                        </includes>
+                    </configuration>
+                </plugin>
+
+                <!--plugin>
+                   <groupId>org.apache.maven.plugins</groupId>
+                   <artifactId>maven-dependency-plugin</artifactId>
+                   <version>3.1.1</version>
+                   <executions>
+                       <execution>
+                           <id>copy-dependencies</id>
+                           <phase>prepare-package</phase>
+                           <goals>
+                               <goal>copy-dependencies</goal>
+                           </goals>
+                           <configuration>
+                               <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                           </configuration>
+                       </execution>
+                        <execution>
+                            <id>analyze</id>
+                            <goals>
+                                <goal>analyze-only</goal>
+                            </goals>
+                            <configuration>
+                                <failOnWarning>true</failOnWarning>
+                                <ignoredDependencies>
+                                    <ignoredDependency>org.projectlombok:lombok</ignoredDependency>
+                                </ignoredDependencies>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin-->
+
+                <!--plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-report-plugin</artifactId>
+                    <version>2.11</version>
+                    <configuration>
+                        <outputDirectory>
+                            ${project.build.directory}/surefire-reports
+                        </outputDirectory>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>test</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin-->
 
                 <plugin>
                     <groupId>org.jacoco</groupId>
@@ -613,7 +670,7 @@
                 <plugin>
                     <groupId>com.spotify</groupId>
                     <artifactId>dockerfile-maven-plugin</artifactId>
-                    <version>1.3.7</version>
+                    <version>${spotify-dockerfile.version}</version>
                     <executions>
                         <execution>
                             <id>default</id>
@@ -635,21 +692,14 @@
                 <plugin>
                     <groupId>com.github.spotbugs</groupId>
                     <artifactId>spotbugs-maven-plugin</artifactId>
-                    <version>3.1.10</version>
+                    <version>${spotbugs.version}</version>
                     <configuration>
-                        <!-- Enables analysis which takes more memory but finds more bugs.
-                            If you run out of memory, changes the value of the effort element
-                            to 'Low'.-->
                         <effort>Max</effort>
-                        <!-- Reports all bugs (other values are medium and max) -->
                         <threshold>Low</threshold>
-                        <!-- Produces XML report -->
                         <xmlOutput>true</xmlOutput>
-                        <!-- Configures the directory in which the XML report is created -->
                         <xmlOutputDirectory>${project.build.directory}/spotbugs</xmlOutputDirectory>
                     </configuration>
                     <executions>
-                        <!-- Ensures that SpotBugs inspects source code when project is compiled. -->
                         <execution>
                             <id>analyze-compile</id>
                             <phase>compile</phase>
@@ -659,25 +709,6 @@
                         </execution>
                     </executions>
                 </plugin>
-                <!--plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.1.1</version>
-                    <executions>
-                        <execution>
-                            <id>analyze</id>
-                            <goals>
-                                <goal>analyze-only</goal>
-                            </goals>
-                            <configuration>
-                                <failOnWarning>true</failOnWarning>
-                                <ignoredDependencies>
-                                    <ignoredDependency>org.projectlombok:lombok</ignoredDependency>
-                                </ignoredDependencies>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin-->
 
             </plugins>
         </pluginManagement>
@@ -686,7 +717,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <!--configuration>
+                <configuration>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.mapstruct</groupId>
@@ -699,26 +730,30 @@
                             <version>${lombok.version}</version>
                         </path>
                     </annotationProcessorPaths>
-                </configuration-->
+                </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
+
             <!--plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
             </plugin-->
             <plugin>
+
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
 
-            <plugin>
+            <!--plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>3.1.1</version>
@@ -731,24 +766,18 @@
                         <configuration>
                             <failOnWarning>true</failOnWarning>
                             <ignoredDependencies>
-                                <!--<ignoredDependency>org.projectlombok:lombok</ignoredDependency>-->
+                                <ignoredDependency>org.projectlombok:lombok</ignoredDependency>>
                                 <ignoredDependency>io.firefly:microservice-core</ignoredDependency>
                             </ignoredDependencies>
                             <ignoreNonCompile>true</ignoreNonCompile>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-
-            <!--plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
             </plugin-->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.7.1</version>
             </plugin>
 
             <plugin>
@@ -756,9 +785,21 @@
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>3.0.0</version>
             </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>${versions.version}</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
         </plugins>
-
-
     </build>
 
     <reporting>
@@ -767,13 +808,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
-                <version>2.3</version>
+                <version>3.0.0</version>
             </plugin>
 
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>5.0.0</version>
+                <version>${owasp.version}</version>
                 <configuration>
                     <format>ALL</format>
                 </configuration>
@@ -810,12 +851,12 @@
                     <plugin>
                         <groupId>eu.stamp-project</groupId>
                         <artifactId>pitmp-maven-plugin</artifactId>
-                        <version>1.3.6</version>
+                        <version>${pitmp.version}</version>
                         <dependencies>
                             <dependency>
                                 <groupId>org.pitest</groupId>
                                 <artifactId>pitest-junit5-plugin</artifactId>
-                                <version>0.7</version>
+                                <version>${pit-junit5.version}</version>
                             </dependency>
                         </dependencies>
                         <executions>
@@ -864,7 +905,7 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <version>5.0.0</version>
+                        <version>${owasp.version}</version>
                         <executions>
                             <execution>
                                 <goals>
@@ -877,7 +918,6 @@
                             <autoUpdate>true</autoUpdate>
                             <format>ALL</format>
                             <skipTestScope>true</skipTestScope>
-                            <externalReport>true</externalReport>
                         </configuration>
                     </plugin>
                 </plugins>

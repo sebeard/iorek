@@ -1,7 +1,11 @@
 package com.stuartbeard.iorek.external.hibp;
 
+import com.stuartbeard.iorek.external.hibp.mapper.HIBPResponseMapper;
+import com.stuartbeard.iorek.external.hibp.service.HIBPService;
 import com.stuartbeard.iorek.external.hibp.service.PwnedPasswordsService;
 import com.stuartbeard.iorek.service.BreachService;
+import com.stuartbeard.iorek.service.model.BreachInformation;
+import com.stuartbeard.iorek.service.model.PasteInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -18,22 +22,20 @@ public class HIBPClient implements BreachService {
     private static final String COUNT_PATTERN = "%s:(?<count>\\d+)";
     private static final String COUNT_GROUP = "count";
 
-    private PwnedPasswordsService pwnedPasswordsService;
-    private Function<String, String> hashFunction;
-    private int prefixLength;
+    private final HIBPService hibpService;
+    private final PwnedPasswordsService pwnedPasswordsService;
+    private final Function<String, String> hashFunction;
+    private final int prefixLength;
 
     @Autowired
     public HIBPClient(PwnedPasswordsService pwnedPasswordsService,
+                      HIBPService hibpService,
                       Function<String, String> hashFunction,
                       @Value("${breach.service.prefix.length:5}") int prefixLength) {
         this.pwnedPasswordsService = pwnedPasswordsService;
+        this.hibpService = hibpService;
         this.hashFunction = hashFunction;
         this.prefixLength = prefixLength;
-    }
-
-    private static Pattern compilePattern(String hashSuffix) {
-        String suffixPattern = String.format(COUNT_PATTERN, hashSuffix);
-        return Pattern.compile(suffixPattern);
     }
 
     @Override
@@ -54,11 +56,26 @@ public class HIBPClient implements BreachService {
             }).orElse(0);
     }
 
+    private static Pattern compilePattern(String hashSuffix) {
+        String suffixPattern = String.format(COUNT_PATTERN, hashSuffix);
+        return Pattern.compile(suffixPattern);
+    }
+
+    @Override
+    public List<BreachInformation> getBreachInformation(@Nonnull String emailAddress) {
+        return HIBPResponseMapper.MAPPER.fromBreaches(hibpService.getBreaches(emailAddress));
+    }
+
     private String getHashPrefix(String passwordHash) {
         return passwordHash.substring(0, prefixLength);
     }
 
     private String getHashSuffix(String passwordHash) {
         return passwordHash.substring(prefixLength);
+    }
+
+    @Override
+    public List<PasteInformation> getPasteInformation(@Nonnull String emailAddress) {
+        return HIBPResponseMapper.MAPPER.fromPastes(hibpService.getPastes(emailAddress));
     }
 }

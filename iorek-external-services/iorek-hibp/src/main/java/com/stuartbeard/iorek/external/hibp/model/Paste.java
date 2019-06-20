@@ -1,9 +1,11 @@
 package com.stuartbeard.iorek.external.hibp.model;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.joda.time.DateTime;
 
 @Data
+@Accessors(chain = true)
 public class Paste {
 
     private String source;

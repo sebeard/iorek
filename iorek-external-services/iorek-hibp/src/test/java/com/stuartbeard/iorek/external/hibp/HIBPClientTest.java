@@ -1,6 +1,6 @@
-package com.stuartbeard.iorek.external;
+package com.stuartbeard.iorek.external.hibp;
 
-import com.stuartbeard.iorek.external.hibp.HIBPClient;
+import com.stuartbeard.iorek.external.hibp.service.HIBPService;
 import com.stuartbeard.iorek.external.hibp.service.PwnedPasswordsService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +27,9 @@ class HIBPClientTest {
     @Mock
     private PwnedPasswordsService pwnedPasswordsService;
 
+    @Mock
+    private HIBPService hibpService;
+
     private HIBPClient hibpClient;
 
     private static String hashPrefix() {
@@ -39,7 +42,7 @@ class HIBPClientTest {
 
     @BeforeEach
     void setupHIBPClient() {
-        hibpClient = new HIBPClient(pwnedPasswordsService, HASH_FUNCTION, PREFIX_LENGTH);
+        hibpClient = new HIBPClient(pwnedPasswordsService, hibpService, HASH_FUNCTION, PREFIX_LENGTH);
     }
 
     @Test

@@ -23,7 +23,7 @@ public class CredentialSafetyController {
 
     private PasswordCheckingService passwordCheckingService;
 
-    @GetMapping("{credential}")
+    @GetMapping("/{credential}")
     @ApiOperation(value = CREDENTIAL_SAFETY_API, response = CredentialSafety.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = API_200_MESSAGE, response = CredentialSafety.class),

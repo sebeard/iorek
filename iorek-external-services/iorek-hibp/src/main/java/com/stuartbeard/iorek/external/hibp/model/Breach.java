@@ -1,11 +1,13 @@
 package com.stuartbeard.iorek.external.hibp.model;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.joda.time.DateTime;
 
 import java.util.List;
 
 @Data
+@Accessors(chain = true)
 public class Breach {
 
     private String name;

@@ -18,6 +18,9 @@ import static org.mockito.Mockito.*;
 class PasswordCheckingServiceTest {
 
     private static final String PASSWORD = "password";
+    private static final String OK = "OK";
+    private static final String SEVERE = "SEVERE";
+    private static final String WARNING = "WARNING";
 
     @Mock
     private BreachService breachService;
@@ -38,9 +41,9 @@ class PasswordCheckingServiceTest {
     @BeforeEach
     void setupPasswordCheckingService() {
         CredentialSafetyConfig safetyConfig = new CredentialSafetyConfig();
-        safetyConfig.setOk(new ThresholdMessage());
-        safetyConfig.setWarning(new ThresholdMessage());
-        safetyConfig.setSevere(new ThresholdMessage());
+        safetyConfig.setOk(new ThresholdMessage().setMessage(OK));
+        safetyConfig.setWarning(new ThresholdMessage().setThreshold(1).setMessage(WARNING));
+        safetyConfig.setSevere(new ThresholdMessage().setThreshold(2).setMessage(SEVERE));
         safetyConfig.setPreventSevere(true);
         passwordCheckingService = new PasswordCheckingService(breachService, safetyConfig);
     }
@@ -52,26 +55,39 @@ class PasswordCheckingServiceTest {
 
     @Test
     void shouldReturnSafeAndAllowedCredentialSafetyWhenNotFoundInDataSet() {
-        when(breachService.getAppearanceCount(sha1Prefix())).thenReturn(0);
+        when(breachService.getAppearanceCount(PASSWORD)).thenReturn(0);
 
         CredentialSafety credentialSafety = passwordCheckingService.checkCredentialSafetyInfo(PASSWORD);
 
-        verify(breachService).getAppearanceCount(sha1Prefix());
+        verify(breachService).getAppearanceCount(PASSWORD);
         assertThat(credentialSafety.getAppearancesInDataSet(), is(0));
-        assertThat(credentialSafety.getMessage(), is(""));
+        assertThat(credentialSafety.getMessage(), is(OK));
         assertThat(credentialSafety.isPasswordAllowed(), is(true));
         assertThat(credentialSafety.isSafe(), is(true));
     }
 
     @Test
-    void shouldReturnUnsafeAndNotAllowedCredentialSafetyWhenFoundInDataSet() {
-        when(breachService.getAppearanceCount(sha1Prefix())).thenReturn(1);
+    void shouldReturnUnsafeAndButAllowedCredentialSafetyWhenFoundInDataSetWithinWarningThreshold() {
+        when(breachService.getAppearanceCount(PASSWORD)).thenReturn(2);
 
         CredentialSafety credentialSafety = passwordCheckingService.checkCredentialSafetyInfo(PASSWORD);
 
-        verify(breachService).getAppearanceCount(sha1Prefix());
-        assertThat(credentialSafety.getAppearancesInDataSet(), is(1));
-        assertThat(credentialSafety.getMessage(), is(""));
+        verify(breachService).getAppearanceCount(PASSWORD);
+        assertThat(credentialSafety.getAppearancesInDataSet(), is(2));
+        assertThat(credentialSafety.getMessage(), is(WARNING));
+        assertThat(credentialSafety.isPasswordAllowed(), is(true));
+        assertThat(credentialSafety.isSafe(), is(false));
+    }
+
+    @Test
+    void shouldReturnUnsafeAndNotAllowedCredentialSafetyWhenFoundInDataSet() {
+        when(breachService.getAppearanceCount(PASSWORD)).thenReturn(3);
+
+        CredentialSafety credentialSafety = passwordCheckingService.checkCredentialSafetyInfo(PASSWORD);
+
+        verify(breachService).getAppearanceCount(PASSWORD);
+        assertThat(credentialSafety.getAppearancesInDataSet(), is(3));
+        assertThat(credentialSafety.getMessage(), is(SEVERE));
         assertThat(credentialSafety.isPasswordAllowed(), is(false));
         assertThat(credentialSafety.isSafe(), is(false));
     }
@@ -79,19 +95,19 @@ class PasswordCheckingServiceTest {
     @Test
     void shouldReturnUnsafeButAllowedCredentialSafetyWhenFoundInDataSetButPreventSevereIsOff() {
         CredentialSafetyConfig safetyConfig = new CredentialSafetyConfig();
-        safetyConfig.setOk(new ThresholdMessage());
-        safetyConfig.setWarning(new ThresholdMessage());
-        safetyConfig.setSevere(new ThresholdMessage());
+        safetyConfig.setOk(new ThresholdMessage().setMessage(OK));
+        safetyConfig.setWarning(new ThresholdMessage().setThreshold(1).setMessage(WARNING));
+        safetyConfig.setSevere(new ThresholdMessage().setThreshold(2).setMessage(SEVERE));
         safetyConfig.setPreventSevere(false);
         passwordCheckingService = new PasswordCheckingService(breachService, safetyConfig);
-        when(breachService.getAppearanceCount(sha1Prefix())).thenReturn(0);
+        when(breachService.getAppearanceCount(PASSWORD)).thenReturn(3);
 
         CredentialSafety credentialSafety = passwordCheckingService.checkCredentialSafetyInfo(PASSWORD);
 
-        verify(breachService).getAppearanceCount(sha1Prefix());
-        assertThat(credentialSafety.getAppearancesInDataSet(), is(0));
-        assertThat(credentialSafety.getMessage(), is(0));
+        verify(breachService).getAppearanceCount(PASSWORD);
+        assertThat(credentialSafety.getAppearancesInDataSet(), is(3));
+        assertThat(credentialSafety.getMessage(), is(SEVERE));
         assertThat(credentialSafety.isPasswordAllowed(), is(true));
-        assertThat(credentialSafety.isSafe(), is(true));
+        assertThat(credentialSafety.isSafe(), is(false));
     }
 }

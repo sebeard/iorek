@@ -12,6 +12,12 @@
     <artifactId>iorek-hibp</artifactId>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-core</artifactId>
@@ -121,5 +127,17 @@
             <version>${okhttp.version}</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+        </plugins>
+
+    </build>
 </project>
