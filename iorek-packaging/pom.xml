@@ -13,9 +13,7 @@
 
     <properties>
         <maven.deploy.skip>false</maven.deploy.skip>
-        <application.name>webservice</application.name>
-        <application.classpath>/usr/share/${application.name}/lib</application.classpath>
-        <application.main>io.firefly.microservice.MicroserviceApplication</application.main>
+        <application.name>api</application.name>
     </properties>
 
     <dependencies>
@@ -31,6 +29,24 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>iorek-api</artifactId>
+                                    <version>${project.version}</version>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>

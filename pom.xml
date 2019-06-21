@@ -75,7 +75,8 @@
         <module>iorek-api</module>
         <module>iorek-service</module>
         <module>iorek-external-services</module>
-        <!--module>iorek-packaging</module-->
+        <module>iorek-packaging</module>
+        <module>iorek-integration-test</module>
     </modules>
 
     <properties>
@@ -88,6 +89,7 @@
         <!-- Dependency Versioning -->
         <bytebuddy.version>1.9.7</bytebuddy.version>
         <commons-codec.version>1.10</commons-codec.version>
+        <cucumber.version>4.3.1</cucumber.version>
         <feign.version>10.2.3</feign.version>
         <feign-annotation-error-decoder.version>1.2.0</feign-annotation-error-decoder.version>
         <findbugs.version>3.0.0</findbugs.version>
@@ -138,9 +140,6 @@
         <!-- Sonar -->
         <maven.build.timestamp.format>MM.yyyy</maven.build.timestamp.format>
         <yearMonth>${maven.build.timestamp}</yearMonth>
-        <!--<sonar.projectKey>firefly-all</sonar.projectKey>-->
-        <!--<sonar.projectName>Firefly All</sonar.projectName>-->
-        <!--<sonar.projectVersion>${yearMonth}</sonar.projectVersion>-->
         <sonar.language>java</sonar.language>
         <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -296,10 +295,30 @@
                 <version>${mapstruct.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${spring.framework.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
             <!-- Test Dependencies -->
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit.jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.junit.vintage</groupId>
+                <artifactId>junit-vintage-engine</artifactId>
                 <version>${junit.jupiter.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -368,7 +387,19 @@
 
             <dependency>
                 <groupId>io.cucumber</groupId>
+                <artifactId>cucumber-java8</artifactId>
+                <version>${cucumber.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.cucumber</groupId>
                 <artifactId>cucumber-junit</artifactId>
+                <version>${cucumber.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.cucumber</groupId>
+                <artifactId>cucumber-spring</artifactId>
                 <version>${cucumber.version}</version>
             </dependency>
 
@@ -555,7 +586,7 @@
                             ${surefire.argLine} -Xmx1024m -Xms1024m --illegal-access=permit
                             -Djdk.net.URLClassPath.disableClassPathURLCheck=true
                         </argLine>
-                        <failIfNoTests>true</failIfNoTests>
+                        <failIfNoTests>false</failIfNoTests>
                         <includes>
                             <include>**/*Test*.java</include>
                         </includes>
@@ -687,6 +718,20 @@
                             <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
                         </buildArgs>
                     </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                                <goal>build-info</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
 
                 <plugin>
