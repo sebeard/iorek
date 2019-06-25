@@ -13,7 +13,7 @@ Feature: Check Credential Safety
         Then I expect to be informed that my password is unsafe
         Then I expect to be informed that my password is disallowed
 
-    Scenario: Provde Credential Unsafe but allowed for Reasonable Password
+    Scenario: Prove Credential Unsafe but allowed for Reasonable Password
         When I check the safety of my password; oreocookie1
         Then I expect to be informed that my password is unsafe
         Then I expect to be informed that my password is allowed
@@ -29,7 +29,7 @@ Feature: Check Credential Safety
         Then I expect to be informed that my password is unsafe
         Then I expect to be informed that my password is disallowed
 
-    Scenario: Provde Credential Unsafe but allowed for Reasonable Hashed Password
+    Scenario: Prove Credential Unsafe but allowed for Reasonable Hashed Password
         When I check the safety of my hashed password; oreocookie1
         Then I expect to be informed that my password is unsafe
         Then I expect to be informed that my password is allowed
