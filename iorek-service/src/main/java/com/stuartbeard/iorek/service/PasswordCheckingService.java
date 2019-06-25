@@ -15,8 +15,8 @@ public class PasswordCheckingService {
     private BreachService breachService;
     private CredentialSafetyConfig credentialSafetyConfig;
 
-    public CredentialSafety checkCredentialSafetyInfo(@Nonnull String password) {
-        int appearancesInDataSet = breachService.getAppearanceCount(password);
+    public CredentialSafety checkCredentialSafetyInfo(@Nonnull String password, boolean isSha1Hash) {
+        int appearancesInDataSet = breachService.getAppearanceCount(password, isSha1Hash);
 
         return new CredentialSafety()
             .setSafe(appearancesInDataSet <= credentialSafetyConfig.getOk().getThreshold())

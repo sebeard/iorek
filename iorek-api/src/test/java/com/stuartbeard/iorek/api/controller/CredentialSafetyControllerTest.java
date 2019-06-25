@@ -47,9 +47,9 @@ class CredentialSafetyControllerTest {
             .setPasswordAllowed(true)
             .setSafe(true)
             .setMessage("");
-        when(passwordCheckingService.checkCredentialSafetyInfo(PASSWORD)).thenReturn(credentialSafety);
+        when(passwordCheckingService.checkCredentialSafetyInfo(PASSWORD, false)).thenReturn(credentialSafety);
 
-        MockHttpServletRequestBuilder request = get("/credential-safety/" + PASSWORD);
+        MockHttpServletRequestBuilder request = get("/credential-safety/" + PASSWORD + "?sha1Hash=false");
 
         controller.perform(request)
             .andExpect(status().isOk())
@@ -58,9 +58,9 @@ class CredentialSafetyControllerTest {
 
     @Test
     void shouldReturnGatewayTimeoutWhenPwnedPasswordsServiceUnavailable() throws Exception {
-        when(passwordCheckingService.checkCredentialSafetyInfo(PASSWORD)).thenThrow(new PwnedPasswordsServiceException("Service Unavailable"));
+        when(passwordCheckingService.checkCredentialSafetyInfo(PASSWORD, false)).thenThrow(new PwnedPasswordsServiceException("Service Unavailable"));
 
-        MockHttpServletRequestBuilder request = get("/credential-safety/" + PASSWORD);
+        MockHttpServletRequestBuilder request = get("/credential-safety/" + PASSWORD + "?sha1Hash=false");
 
         controller.perform(request)
             .andExpect(status().isGatewayTimeout())

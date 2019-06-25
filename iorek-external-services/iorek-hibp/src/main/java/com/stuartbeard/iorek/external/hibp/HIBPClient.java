@@ -39,8 +39,8 @@ public class HIBPClient implements BreachService {
     }
 
     @Override
-    public int getAppearanceCount(@Nonnull String password) {
-        String hash = hashFunction.apply(password).toUpperCase();
+    public int getAppearanceCount(@Nonnull String password, boolean isSha1Hash) {
+        String hash = isSha1Hash ? password.toUpperCase() : hashFunction.apply(password).toUpperCase();
         String hashPrefix = getHashPrefix(hash);
         String hashSuffix = getHashSuffix(hash);
         Pattern countPattern = compilePattern(hashSuffix);

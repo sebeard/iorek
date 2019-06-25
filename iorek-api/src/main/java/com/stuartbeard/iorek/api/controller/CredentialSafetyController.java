@@ -34,7 +34,8 @@ public class CredentialSafetyController {
         @ResponseHeader(name = HttpHeaders.RETRY_AFTER))
     })
     @ResponseBody
-    public CredentialSafety getCredentialSafety(@PathVariable("credential") String credential) {
-        return passwordCheckingService.checkCredentialSafetyInfo(credential);
+    public CredentialSafety getCredentialSafety(@PathVariable("credential") String credential,
+                                                @RequestParam(value = "sha1Hash", defaultValue = "true") boolean isSha1Hash) {
+        return passwordCheckingService.checkCredentialSafetyInfo(credential, isSha1Hash);
     }
 }

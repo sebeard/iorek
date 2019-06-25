@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.is;
 public class IorekApiActions {
 
     private static final String PING = "";
-    private static final String GET_CREDENTIAL_SAFETY = "http://192.168.64.2:8080/credential-safety/{credential}";
+    private static final String GET_CREDENTIAL_SAFETY = "http://192.168.64.2:8080/credential-safety/{credential}?sha1Hash={sha1Hashed}";
     private final TestRestTemplate testRestTemplate;
 
     public boolean ping() {
@@ -24,8 +24,8 @@ public class IorekApiActions {
         return true;
     }
 
-    public CredentialSafetyObject getCredentialSafety(String password) {
-        ResponseEntity<CredentialSafetyObject> responseEntity = testRestTemplate.getForEntity(GET_CREDENTIAL_SAFETY, CredentialSafetyObject.class, password);
+    public CredentialSafetyObject getCredentialSafety(String password, boolean sha1Hashed) {
+        ResponseEntity<CredentialSafetyObject> responseEntity = testRestTemplate.getForEntity(GET_CREDENTIAL_SAFETY, CredentialSafetyObject.class, password, sha1Hashed);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
         return responseEntity.getBody();
     }

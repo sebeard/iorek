@@ -5,6 +5,7 @@ import cucumber.api.java8.En;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
+import static org.apache.commons.codec.digest.DigestUtils.sha1Hex;
 import static org.junit.Assert.fail;
 
 @ContextConfiguration(classes = IntegrationTestConfiguration.class)
@@ -23,7 +24,12 @@ public class IorekApiSteps implements En {
         });
 
         When("^I check the safety of my password; (.*)$", (String password) -> {
-            iorekActions.getCredentialSafety(password);
+            iorekActions.getCredentialSafety(password, false);
+        });
+
+        When("^I check the safety of my hashed password; (.*)$", (String password) -> {
+            String sha1Hash = sha1Hex(password);
+            iorekActions.getCredentialSafety(sha1Hash, true);
         });
 
         Then("^I expect to be informed that my password is (unsafe|safe)$", (String safe) -> {

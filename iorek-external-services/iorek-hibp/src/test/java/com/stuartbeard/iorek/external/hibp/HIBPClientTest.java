@@ -4,14 +4,18 @@ import com.stuartbeard.iorek.external.hibp.service.HIBPService;
 import com.stuartbeard.iorek.external.hibp.service.PwnedPasswordsService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.apache.commons.codec.digest.DigestUtils.sha1Hex;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.verify;
@@ -45,21 +49,30 @@ class HIBPClientTest {
         hibpClient = new HIBPClient(pwnedPasswordsService, hibpService, HASH_FUNCTION, PREFIX_LENGTH);
     }
 
-    @Test
-    void shouldReturnCountWhenPasswordHashFoundInDataSet() {
+    private static Stream<Arguments> inputs() {
+        return Stream.of(
+            Arguments.of(PASSWORD, false),
+            Arguments.of(sha1Hex(PASSWORD), true)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("inputs")
+    void shouldReturnCountWhenPasswordHashFoundInDataSet(String input, boolean sha1Hash) {
         when(pwnedPasswordsService.getMatchingSuffixes(hashPrefix())).thenReturn(singletonList(hashSuffix() + ":999999"));
 
-        int count = hibpClient.getAppearanceCount(PASSWORD);
+        int count = hibpClient.getAppearanceCount(input, sha1Hash);
 
         verify(pwnedPasswordsService).getMatchingSuffixes(hashPrefix());
         assertThat(count, is(999999));
     }
 
-    @Test
-    void shouldReturnZeroWhenPasswordHashNotFoundInDataSet() {
+    @ParameterizedTest
+    @MethodSource("inputs")
+    void shouldReturnZeroWhenPasswordHashNotFoundInDataSet(String input, boolean sha1Hash) {
         when(pwnedPasswordsService.getMatchingSuffixes(hashPrefix())).thenReturn(emptyList());
 
-        int count = hibpClient.getAppearanceCount(PASSWORD);
+        int count = hibpClient.getAppearanceCount(input, sha1Hash);
 
         verify(pwnedPasswordsService).getMatchingSuffixes(hashPrefix());
         assertThat(count, is(0));

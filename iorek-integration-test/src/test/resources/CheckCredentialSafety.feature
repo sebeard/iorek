@@ -17,3 +17,19 @@ Feature: Check Credential Safety
         When I check the safety of my password; oreocookie1
         Then I expect to be informed that my password is unsafe
         Then I expect to be informed that my password is allowed
+
+    Scenario: Prove Credential Safe for Strong Hashed Password
+        When I check the safety of my hashed password; mySuperSecretPassword
+        Then I expect to be informed that my password is safe
+        Then I expect to be informed that my password is allowed
+        Then I expect to be informed that my password has been breached 0 times
+
+    Scenario: Prove Credential unsafe and not allowed for Weak Hashed Password
+        When I check the safety of my hashed password; password
+        Then I expect to be informed that my password is unsafe
+        Then I expect to be informed that my password is disallowed
+
+    Scenario: Provde Credential Unsafe but allowed for Reasonable Hashed Password
+        When I check the safety of my hashed password; oreocookie1
+        Then I expect to be informed that my password is unsafe
+        Then I expect to be informed that my password is allowed
