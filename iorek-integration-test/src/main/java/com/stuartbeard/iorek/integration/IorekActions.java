@@ -18,8 +18,8 @@ public class IorekActions {
         assertThat(iorekApiActions.ping(), is(true));
     }
 
-    public void getCredentialSafety(String password) {
-        CredentialSafetyObject credentialSafetyObject = iorekApiActions.getCredentialSafety(password);
+    public void getCredentialSafety(String password, boolean sha1Hashed) {
+        CredentialSafetyObject credentialSafetyObject = iorekApiActions.getCredentialSafety(password, sha1Hashed);
         scenarioContext.setContext("credentialSafety", credentialSafetyObject);
     }
 
