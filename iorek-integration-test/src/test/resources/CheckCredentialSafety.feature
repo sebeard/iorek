@@ -1,6 +1,7 @@
 Feature: Check Credential Safety
 
-    Background: Given the Iorek API Service is running
+    Background:
+        Given the Iorek API Service is running
 
     Scenario: Prove Credential Safe for Strong Password
         When I check the safety of my password; mySuperSecretPassword
