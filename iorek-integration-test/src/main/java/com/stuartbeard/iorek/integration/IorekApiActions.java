@@ -14,8 +14,8 @@ import static org.hamcrest.Matchers.is;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class IorekApiActions {
 
-    private static final String PING = "";
-    private static final String GET_CREDENTIAL_SAFETY = "http://192.168.64.2:8080/credential-safety/{credential}?sha1Hash={sha1Hashed}";
+    private static final String PING = "http://localhost:8080/actuator/health";
+    private static final String GET_CREDENTIAL_SAFETY = "http://localhost:8080/credential-safety/{credential}?sha1Hash={sha1Hashed}";
     private final TestRestTemplate testRestTemplate;
 
     public boolean ping() {
