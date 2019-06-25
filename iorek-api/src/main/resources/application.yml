@@ -7,12 +7,12 @@ breach.service:
 
 credential.safety:
   ok:
-    message: "The input password did not appear in any known breach within the data set."
+    message: "Your password did not appear in any known data breach."
     threshold: 0
   warning:
-    message: "The input password appeared %s times in the breach data set. You can use this password, but you probably shouldn't."
+    message: "Your password appeared %s times in known breached data. You can use this password, but you probably shouldn't."
     threshold: 0
   severe:
-    message: "The input password appeared %s times in the breach data set. As this represents a severe risk, you may not use this password."
+    message: "Your password appeared %s times in known breached data. As this represents a severe risk, you may not use this password."
     threshold: 1000
   preventSevere: true
