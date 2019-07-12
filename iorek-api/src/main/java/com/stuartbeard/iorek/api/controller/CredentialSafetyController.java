@@ -15,22 +15,24 @@ import static com.stuartbeard.iorek.api.descriptions.APIDescriptions.*;
 @RequestMapping("credential-safety")
 @Api(value = "Credential Safety Endpoint",
     produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
-    description = CREDENTIAL_SAFETY_API,
-    tags = {"credentials", "breaches", "pastes", "security"}
+    description = GET_CREDENTIAL_SAFETY_DESC,
+    tags = {"credentials"}
 )
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class CredentialSafetyController {
 
     private PasswordCheckingService passwordCheckingService;
 
-    @GetMapping("/{credential}")
-    @ApiOperation(value = CREDENTIAL_SAFETY_API, response = CredentialSafety.class)
+    @GetMapping(value = "/{credential}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = GET_CREDENTIAL_SAFETY_DESC, response = CredentialSafety.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = API_200_MESSAGE, response = CredentialSafety.class),
         @ApiResponse(code = 429, message = API_429_MESSAGE, response = String.class, responseHeaders =
         @ResponseHeader(name = HttpHeaders.RETRY_AFTER)),
         @ApiResponse(code = 500, message = API_500_MESSAGE, response = String.class),
         @ApiResponse(code = 503, message = API_503_MESSAGE, response = String.class, responseHeaders =
+        @ResponseHeader(name = HttpHeaders.RETRY_AFTER)),
+        @ApiResponse(code = 504, message = API_504_MESSAGE, response = String.class, responseHeaders =
         @ResponseHeader(name = HttpHeaders.RETRY_AFTER))
     })
     @ResponseBody
