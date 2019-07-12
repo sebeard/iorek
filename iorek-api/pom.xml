@@ -57,22 +57,7 @@
 
         <dependency>
             <groupId>io.springfox</groupId>
-            <artifactId>springfox-spi</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-common</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-spring-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-core</artifactId>
+            <artifactId>springfox-swagger2</artifactId>
         </dependency>
 
         <dependency>
@@ -131,6 +116,12 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
             <scope>runtime</scope>
         </dependency>
 

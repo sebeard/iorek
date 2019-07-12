@@ -5,42 +5,28 @@ import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger.web.UiConfiguration;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import static java.util.Collections.singleton;
+import java.util.HashSet;
+
+import static java.util.Arrays.asList;
 import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
+@EnableSwagger2
 public class SwaggerConfig {
 
     @Bean
-    public Docket apiDocumentation() {
+    public Docket apiDocumentation(ApiInfoProperties apiInfoProperties) {
         return new Docket(DocumentationType.SWAGGER_2)
             .useDefaultResponseMessages(false)
             .select()
-            .apis(RequestHandlerSelectors.any())
+            .apis(RequestHandlerSelectors.basePackage("com.stuartbeard.iorek"))
             .paths(regex("/.*"))
             .build()
-            .pathMapping("/v1")
-            //.apiInfo(apiInfo())
-            .enableUrlTemplating(true)
-            .protocols(singleton("https"));
+            .pathMapping("/")
+            .apiInfo(apiInfoProperties.toApiInfo())
+            .enableUrlTemplating(false)
+            .protocols(new HashSet<>(asList("http", "https")));
     }
-
-    @Bean
-    public UiConfiguration uiConfiguration() {
-        return new UiConfiguration(null);
-    }
-
-//    private ApiInfo apiInfo() {
-//        return new ApiInfo(
-//            apiInfo.getTitle(),
-//            apiInfo.getDescription(),
-//            apiInfo.getVersion(),
-//            apiInfo.getTermsOfService(),
-//            new Contact(apiInfo.getContact().getName(), apiInfo.getContact().getEmail(), apiInfo.getContact().getUrl()),
-//            apiInfo.getLicenseTitle(),
-//            apiInfo.getLicenseUrl()
-//        );
-//    }
 }

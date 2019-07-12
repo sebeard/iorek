@@ -1,3 +1,15 @@
+api.info:
+  title: Iorek
+  description: Iorek
+  version: v1
+  termsOfService: tosUrl
+  contact:
+    name: Stuart Beard
+    email: stuart@stuartbeard.com
+    url: https://www.stuartbeard.com
+  licenseTitle: licenseTitle
+  licenseUrl: licenseUrl
+
 breach.service:
   name: "hibp"
   url:

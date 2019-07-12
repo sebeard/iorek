@@ -109,7 +109,7 @@
         <slf4j.version>1.7.25</slf4j.version>
         <spring.framework.version>5.0.12.RELEASE</spring.framework.version>
         <spring-boot.version>2.0.8.RELEASE</spring-boot.version>
-        <springfox.version>2.6.0</springfox.version>
+        <springfox.version>2.9.2</springfox.version>
         <swagger.version>1.5.15</swagger.version>
 
         <!-- Plugin Versioning -->
@@ -261,25 +261,13 @@
 
             <dependency>
                 <groupId>io.springfox</groupId>
-                <artifactId>springfox-spi</artifactId>
+                <artifactId>springfox-swagger-ui</artifactId>
                 <version>${springfox.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger-common</artifactId>
-                <version>${springfox.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-spring-web</artifactId>
-                <version>${springfox.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-core</artifactId>
+                <artifactId>springfox-swagger2</artifactId>
                 <version>${springfox.version}</version>
             </dependency>
 
@@ -293,6 +281,12 @@
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
                 <version>${mapstruct.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
 
             <dependency>
