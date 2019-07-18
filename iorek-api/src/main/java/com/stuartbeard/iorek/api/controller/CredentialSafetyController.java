@@ -13,9 +13,9 @@ import static com.stuartbeard.iorek.api.descriptions.APIDescriptions.*;
 
 @RestController
 @RequestMapping("credential-safety")
-@Api(value = "Credential Safety Endpoint",
+@Api(value = CREDENTIAL_SAFETY_NAME,
     produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
-    description = GET_CREDENTIAL_SAFETY_DESC,
+    description = CREDENTIAL_SAFETY_DESC,
     tags = {"credentials"}
 )
 @AllArgsConstructor(onConstructor = @__(@Autowired))

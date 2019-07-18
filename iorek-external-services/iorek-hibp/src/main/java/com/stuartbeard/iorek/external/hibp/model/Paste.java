@@ -1,16 +1,23 @@
 package com.stuartbeard.iorek.external.hibp.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.joda.time.DateTime;
+
+import java.util.Date;
 
 @Data
 @Accessors(chain = true)
 public class Paste {
 
+    @JsonProperty("Source")
     private String source;
+    @JsonProperty("Id")
     private String id;
+    @JsonProperty("Title")
     private String title;
-    private DateTime date;
-    private int emailCount;
+    @JsonProperty("Date")
+    private Date date;
+    @JsonProperty("EmailCount")
+    private Integer emailCount;
 }

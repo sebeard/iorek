@@ -1,4 +1,4 @@
-package com.stuartbeard.iorek.integration;
+package com.stuartbeard.iorek.integration.model;
 
 import lombok.Data;
 

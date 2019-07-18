@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class CredentialSafetyConfig {
 
     private boolean preventSevere = true;
-    private ThresholdMessage ok;
-    private ThresholdMessage severe;
-    private ThresholdMessage warning;
+    private ThresholdMessage ok = new ThresholdMessage().setMessage("credential.safety.ok").setThreshold(0);
+    private ThresholdMessage warning = new ThresholdMessage().setMessage("credential.safety.warning").setThreshold(0);
+    private ThresholdMessage severe = new ThresholdMessage().setMessage("credential.safety.severe").setThreshold(0);
 }

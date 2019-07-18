@@ -1,5 +1,8 @@
-package com.stuartbeard.iorek.integration;
+package com.stuartbeard.iorek.integration.steps;
 
+import com.stuartbeard.iorek.integration.ScenarioContext;
+import com.stuartbeard.iorek.integration.actions.IorekActions;
+import com.stuartbeard.iorek.integration.config.IntegrationTestConfiguration;
 import cucumber.api.java.After;
 import cucumber.api.java8.En;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,10 @@ public class IorekApiSteps implements En {
             iorekActions.getCredentialSafety(sha1Hash, true);
         });
 
+        When("^I check the breach information for my email address; (.*)$", (String email) -> {
+            iorekActions.getBreachInformation(email);
+        });
+
         Then("^I expect to be informed that my password is (unsafe|safe)$", (String safe) -> {
             if ("unsafe".equals(safe)) {
                 iorekActions.verifyPasswordSafety(false);
@@ -62,6 +69,14 @@ public class IorekApiSteps implements En {
 
         Then("^I expect to be informed that my password has been breached (\\d+) times$", (Integer breachCount) -> {
             iorekActions.verifyPasswordBreachCount(breachCount);
+        });
+
+        Then("^I expect that my email was in (\\d+) data breaches$", (Integer breachCount) -> {
+            iorekActions.verifyDataBreachCount(breachCount);
+        });
+
+        Then("^I expect that my email was in (\\d+) pastes$", (Integer pasteCount) -> {
+            iorekActions.verifyPasteCount(pasteCount);
         });
     }
 

@@ -46,7 +46,7 @@ class PwnedPasswordsServiceTest {
     }
 
     @Test
-    void shouldThrowPwnedPasswordExcpetionWhenServiceUnavailable() {
+    void shouldThrowPwnedPasswordExceptionWhenServiceUnavailable() {
         pwnedPasswordsAPI.enqueue(new MockResponse()
             .setResponseCode(503));
 

@@ -1,6 +1,5 @@
 package com.stuartbeard.iorek.api.model;
 
-import com.stuartbeard.iorek.service.model.BreachInformation;
 import org.junit.jupiter.api.Test;
 import org.meanbean.test.BeanTester;
 import org.meanbean.test.EqualsMethodTester;
@@ -10,16 +9,16 @@ class MessageTest {
 
     @Test
     void shouldHaveValidGettersAndSetters() {
-        new BeanTester().testBean(BreachInformation.class);
+        new BeanTester().testBean(Message.class);
     }
 
     @Test
     void shouldHaveValidEqualsMethod() {
-        new EqualsMethodTester().testEqualsMethod(BreachInformation.class);
+        new EqualsMethodTester().testEqualsMethod(Message.class);
     }
 
     @Test
     void shouldHaveValidHashCodeMethod() {
-        new HashCodeMethodTester().testHashCodeMethod(BreachInformation.class);
+        new HashCodeMethodTester().testHashCodeMethod(Message.class);
     }
 }

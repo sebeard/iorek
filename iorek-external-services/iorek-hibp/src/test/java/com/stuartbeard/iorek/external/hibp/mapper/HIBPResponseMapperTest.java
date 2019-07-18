@@ -120,7 +120,7 @@ class HIBPResponseMapperTest {
             .setTitle(TITLE)
             .setSource(SOURCE)
             .setEmailCount(EMAIL_COUNT)
-            .setDate(NOW);
+            .setDate(NOW.toDate());
     }
 
     private Breach generateBreach() {
@@ -136,9 +136,9 @@ class HIBPResponseMapperTest {
             .setFabricated(FABRICATED)
             .setSensitive(SENSITIVE)
             .setSpamList(SPAM_LIST)
-            .setAddedDate(NOW)
-            .setBreachDate(NOW)
-            .setModifiedDate(NOW)
+            .setAddedDate(NOW.toDate())
+            .setBreachDate(NOW.toDate())
+            .setModifiedDate(NOW.toDate())
             .setDataClasses(DATA_CLASSES);
     }
 

@@ -1,4 +1,4 @@
-package com.stuartbeard.iorek.service.model;
+package com.stuartbeard.iorek.integration.model;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Accessors(chain = true)
-public class BreachInformation {
+public class BreachInformationObject {
 
     private String name;
     private String domain;

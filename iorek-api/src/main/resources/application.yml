@@ -11,10 +11,11 @@ api.info:
   licenseUrl: licenseUrl
 
 breach.service:
+  apiKey: "YOUR HIBP API KEY HERE"
   name: "hibp"
   url:
     pp: "https://api.pwnedpasswords.com"
-    hibp: "https://haveibeenpwned.com/api/v2"
+    hibp: "https://haveibeenpwned.com/api/v3"
   prefix.length: 5
 
 credential.safety:

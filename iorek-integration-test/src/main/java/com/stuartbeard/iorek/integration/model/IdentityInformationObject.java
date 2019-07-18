@@ -1,4 +1,4 @@
-package com.stuartbeard.iorek.service.model;
+package com.stuartbeard.iorek.integration.model;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -8,10 +8,10 @@ import java.util.List;
 
 @Data
 @Accessors(chain = true)
-public class IdentityInformation {
+public class IdentityInformationObject {
 
-    private List<BreachInformation> breaches;
-    private List<PasteInformation> pastes;
+    private List<BreachInformationObject> breaches;
+    private List<PasteInformationObject> pastes;
     private String message;
     private Date checked;
 }

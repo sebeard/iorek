@@ -1,9 +1,7 @@
 package com.stuartbeard.iorek.api.exception;
 
 import com.stuartbeard.iorek.api.model.Message;
-import com.stuartbeard.iorek.external.hibp.exception.HIBPServiceException;
-import com.stuartbeard.iorek.external.hibp.exception.HIBPTooManyRequestsException;
-import com.stuartbeard.iorek.external.hibp.exception.PwnedPasswordsServiceException;
+import com.stuartbeard.iorek.external.hibp.exception.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,11 +32,33 @@ class IorekApiExceptionHandlerTest {
 
     @Test
     void shouldHandleHIBPTooManyRequestsException() {
-        HIBPTooManyRequestsException exception = new HIBPTooManyRequestsException(Collections.singletonMap(HttpHeaders.RETRY_AFTER, "2"), MESSAGE);
+        HIBPTooManyRequestsException exception = new HIBPTooManyRequestsException(Collections.singletonMap(HttpHeaders.RETRY_AFTER, Collections.singleton("2")), MESSAGE);
 
         ResponseEntity<Message> response = handler.handle(exception);
 
         assertThat(response.getStatusCode(), is(HttpStatus.TOO_MANY_REQUESTS));
+        assertThat(response.getBody(), is(notNullValue()));
+        assertThat(response.getBody().getMessage(), is(MESSAGE));
+    }
+
+    @Test
+    void shouldHandleHIBPBadRequestException() {
+        HIBPBadRequestException exception = new HIBPBadRequestException(MESSAGE);
+
+        ResponseEntity<Message> response = handler.handle(exception);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+        assertThat(response.getBody(), is(notNullValue()));
+        assertThat(response.getBody().getMessage(), is(MESSAGE));
+    }
+
+    @Test
+    void shouldHandleHIBPNotFoundException() {
+        HIBPNotFoundException exception = new HIBPNotFoundException(MESSAGE);
+
+        ResponseEntity<Message> response = handler.handle(exception);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
         assertThat(response.getBody(), is(notNullValue()));
         assertThat(response.getBody().getMessage(), is(MESSAGE));
     }

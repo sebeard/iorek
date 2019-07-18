@@ -20,7 +20,7 @@ public interface HIBPResponseMapper {
 
     List<BreachInformation> fromBreaches(List<Breach> breaches);
 
-    //@Mapping(target = "added", source = "date")
+    @Mapping(target = "added", source = "date")
     PasteInformation fromPaste(Paste paste);
 
     List<PasteInformation> fromPastes(List<Paste> pastes);

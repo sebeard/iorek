@@ -1,6 +1,7 @@
 package com.stuartbeard.iorek.api.config;
 
 import com.stuartbeard.iorek.external.hibp.decoder.CLRFStringDecoder;
+import com.stuartbeard.iorek.external.hibp.interceptor.HIBPRequestInterceptor;
 import com.stuartbeard.iorek.external.hibp.service.HIBPService;
 import com.stuartbeard.iorek.external.hibp.service.PwnedPasswordsService;
 import feign.Feign;
@@ -39,8 +40,9 @@ public class HIBPConfig {
     }
 
     @Bean
-    HIBPService hibpService(@Value("${breach.service.url.hibp}") String baseUrl) {
+    HIBPService hibpService(HIBPRequestInterceptor requestInterceptor, @Value("${breach.service.url.hibp}") String baseUrl) {
         return Feign.builder()
+            .requestInterceptor(requestInterceptor)
             .errorDecoder(builderFor(HIBPService.class).build())
             .decoder(new JacksonDecoder())
             .client(new OkHttpClient())

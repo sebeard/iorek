@@ -1,5 +1,6 @@
 package com.stuartbeard.iorek.external.hibp;
 
+import com.stuartbeard.iorek.external.hibp.exception.HIBPNotFoundException;
 import com.stuartbeard.iorek.external.hibp.mapper.HIBPResponseMapper;
 import com.stuartbeard.iorek.external.hibp.service.HIBPService;
 import com.stuartbeard.iorek.external.hibp.service.PwnedPasswordsService;
@@ -15,6 +16,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.util.Collections.emptyList;
 
 @Component
 public class HIBPClient implements BreachService {
@@ -63,19 +66,27 @@ public class HIBPClient implements BreachService {
 
     @Override
     public List<BreachInformation> getBreachInformation(@Nonnull String emailAddress) {
-        return HIBPResponseMapper.MAPPER.fromBreaches(hibpService.getBreaches(emailAddress));
+        try {
+            return HIBPResponseMapper.MAPPER.fromBreaches(hibpService.getBreaches(emailAddress));
+        } catch (HIBPNotFoundException e) {
+            return emptyList();
+        }
     }
 
-    private String getHashPrefix(String passwordHash) {
-        return passwordHash.substring(0, prefixLength);
+    @Override
+    public List<PasteInformation> getPasteInformation(@Nonnull String emailAddress) {
+        try {
+            return HIBPResponseMapper.MAPPER.fromPastes(hibpService.getPastes(emailAddress));
+        } catch (HIBPNotFoundException e) {
+            return emptyList();
+        }
     }
 
     private String getHashSuffix(String passwordHash) {
         return passwordHash.substring(prefixLength);
     }
 
-    @Override
-    public List<PasteInformation> getPasteInformation(@Nonnull String emailAddress) {
-        return HIBPResponseMapper.MAPPER.fromPastes(hibpService.getPastes(emailAddress));
+    private String getHashPrefix(String passwordHash) {
+        return passwordHash.substring(0, prefixLength);
     }
 }
