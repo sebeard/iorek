@@ -1,5 +1,6 @@
 package com.stuartbeard.iorek.api.config;
 
+import com.stuartbeard.iorek.api.config.properties.ApiInfoProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.RequestHandlerSelectors;
