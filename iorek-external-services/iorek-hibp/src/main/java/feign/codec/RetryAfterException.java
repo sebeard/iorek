@@ -1,6 +1,5 @@
 package feign.codec;
 
-import feign.Request;
 import feign.RetryableException;
 import feign.codec.ErrorDecoder.RetryAfterDecoder;
 
@@ -14,7 +13,7 @@ public abstract class RetryAfterException extends RetryableException {
     private static final long serialVersionUID = 1L;
 
     public RetryAfterException(int code, Map<String, Collection<String>> headers, String body) {
-        super(code, body, Request.HttpMethod.GET, new RetryAfterDecoder().apply(retryAfterOrNull(headers)));
+        super(code, body, null, new RetryAfterDecoder().apply(retryAfterOrNull(headers)));
     }
 
     private static <T> T retryAfterOrNull(Map<String, Collection<T>> map) {
