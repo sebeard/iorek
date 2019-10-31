@@ -1,4 +1,4 @@
-package com.stuartbeard.iorek.api.config;
+package com.stuartbeard.iorek.api.config.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

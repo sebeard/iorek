@@ -1,4 +1,4 @@
-package com.stuartbeard.iorek.api.config;
+package com.stuartbeard.iorek.api.config.properties;
 
 import org.junit.jupiter.api.Test;
 import org.meanbean.lang.Factory;
