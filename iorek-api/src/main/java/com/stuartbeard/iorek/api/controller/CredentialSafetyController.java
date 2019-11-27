@@ -14,7 +14,7 @@ import static com.stuartbeard.iorek.api.descriptions.APIDescriptions.*;
 @RestController
 @RequestMapping("credential-safety")
 @Api(value = CREDENTIAL_SAFETY_NAME,
-    produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+    produces = MediaType.APPLICATION_JSON_VALUE,
     description = CREDENTIAL_SAFETY_DESC,
     tags = {"credentials"}
 )
@@ -23,7 +23,7 @@ public class CredentialSafetyController {
 
     private PasswordCheckingService passwordCheckingService;
 
-    @GetMapping(value = "/{credential}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/{credential}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = GET_CREDENTIAL_SAFETY_DESC, response = CredentialSafety.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = API_200_MESSAGE, response = CredentialSafety.class),

@@ -1,0 +1,12 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPathPattern": "/pasteaccount/(((?!paste).)*)@email.com"
+    },
+    "response": {
+        "status": 404,
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

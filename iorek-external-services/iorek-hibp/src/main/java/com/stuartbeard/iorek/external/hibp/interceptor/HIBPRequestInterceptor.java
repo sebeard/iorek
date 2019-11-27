@@ -12,7 +12,7 @@ public class HIBPRequestInterceptor implements RequestInterceptor {
 
     private final String apiKey;
 
-    public HIBPRequestInterceptor(@Value("${breach.service.apiKey}") String apiKey) {
+    public HIBPRequestInterceptor(@Value("${breach.service.apikey}") String apiKey) {
         this.apiKey = apiKey;
     }
 

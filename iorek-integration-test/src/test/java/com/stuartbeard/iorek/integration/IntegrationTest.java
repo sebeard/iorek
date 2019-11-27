@@ -1,8 +1,12 @@
 package com.stuartbeard.iorek.integration;
 
-import cucumber.api.CucumberOptions;
-import cucumber.api.junit.Cucumber;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "src/test/resources",
@@ -10,4 +14,20 @@ import org.junit.runner.RunWith;
     glue = {"com.stuartbeard.iorek.integration.steps"},
     strict = true)
 public class IntegrationTest {
+
+    @Autowired
+    WireMock wireMock;
+
+    @Before
+    public void setup() {
+        setupWiremock();
+    }
+
+    @After
+    public void tearDown() {
+        WireMock.reset();
+    }
+
+    void setupWiremock() {
+    }
 }

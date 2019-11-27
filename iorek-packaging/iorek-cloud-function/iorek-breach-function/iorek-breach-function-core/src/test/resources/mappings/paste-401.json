@@ -1,0 +1,12 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPathPattern": "/pasteaccount/notauthorised@email.com"
+    },
+    "response": {
+        "status": 401,
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

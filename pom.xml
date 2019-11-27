@@ -82,17 +82,19 @@
     <properties>
 
         <!-- Compiler Options -->
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.release>8</maven.compiler.release>
 
         <!-- Dependency Versioning -->
-        <bytebuddy.version>1.9.7</bytebuddy.version>
+        <aws-lambda-events.version>2.2.6</aws-lambda-events.version>
+        <aws-lambda-log4j.version>1.0.0</aws-lambda-log4j.version>
+        <bytebuddy.version>1.10.3</bytebuddy.version>
         <commons-codec.version>1.10</commons-codec.version>
-        <cucumber.version>4.3.1</cucumber.version>
-        <feign.version>10.2.3</feign.version>
+        <cucumber.version>5.0.0-RC1</cucumber.version>
+        <feign.version>10.3.0</feign.version>
         <feign-annotation-error-decoder.version>1.2.0</feign-annotation-error-decoder.version>
-        <findbugs.version>3.0.0</findbugs.version>
+        <findbugs.version>3.0.1u2</findbugs.version>
         <hamcrest.version>1.3</hamcrest.version>
         <jackson.version>2.9.9</jackson.version>
         <joda.version>2.9.9</joda.version>
@@ -104,15 +106,19 @@
         <mockito.version>2.28.2</mockito.version>
         <mapstruct.version>1.3.0.Final</mapstruct.version>
         <retrofit.version>2.5.0</retrofit.version>
-        <okhttp.version>3.12.1</okhttp.version>
+        <okhttp.version>4.2.2</okhttp.version>
         <skyscreamer.version>1.5.0</skyscreamer.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <spring.framework.version>5.0.12.RELEASE</spring.framework.version>
-        <spring-boot.version>2.0.8.RELEASE</spring-boot.version>
+        <spring.framework.version>5.1.7.RELEASE</spring.framework.version>
+        <spring-boot.version>2.1.5.RELEASE</spring-boot.version>
+        <spring-cloud.version>2.1.0.RELEASE</spring-cloud.version>
+        <spring-cloud-contract.version>2.1.3.RELEASE</spring-cloud-contract.version>
         <springfox.version>2.9.2</springfox.version>
         <swagger.version>1.5.15</swagger.version>
+        <wiremock.version>2.25.1</wiremock.version>
 
         <!-- Plugin Versioning -->
+        <jacoco.version>0.8.4</jacoco.version>
         <maven-compiler.version>3.8.1</maven-compiler.version>
         <maven-assembler.version>3.1.1</maven-assembler.version>
         <maven-clean.version>3.1.0</maven-clean.version>
@@ -123,14 +129,15 @@
         <maven-install.version>3.0.0-M1</maven-install.version>
         <maven-jar.version>3.1.2</maven-jar.version>
         <maven-resources.version>3.1.0</maven-resources.version>
+        <maven-shade.version>3.2.1</maven-shade.version>
         <maven-site.version>3.7.1</maven-site.version>
         <maven-surefire.version>2.22.2</maven-surefire.version>
-        <spotify-dockerfile.version>1.4.10</spotify-dockerfile.version>
-        <spotbugs.version>3.1.12</spotbugs.version>
-        <jacoco.version>0.8.4</jacoco.version>
+        <owasp.version>5.2.2</owasp.version>
         <pitmp.version>1.3.7</pitmp.version>
         <pit-junit5.version>0.7</pit-junit5.version>
-        <owasp.version>5.0.0</owasp.version>
+        <spotbugs.version>3.1.12</spotbugs.version>
+        <spotify-dockerfile.version>1.4.10</spotify-dockerfile.version>
+        <spring-boot-thin-layout.version>1.0.10.RELEASE</spring-boot-thin-layout.version>
         <versions.version>2.7</versions.version>
 
         <!-- Encoding Output -->
@@ -165,6 +172,18 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-lambda-java-events</artifactId>
+                <version>${aws-lambda-events.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-lambda-java-log4j</artifactId>
+                <version>${aws-lambda-log4j.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>net.bytebuddy</groupId>
@@ -220,6 +239,18 @@
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-function-web</artifactId>
+                <version>${spring-cloud.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-function-adapter-aws</artifactId>
+                <version>${spring-cloud.version}</version>
             </dependency>
 
             <dependency>
@@ -324,6 +355,13 @@
             </dependency>
 
             <dependency>
+                <groupId>org.junit.juptier</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
                 <version>${mockito.version}</version>
@@ -386,16 +424,24 @@
                 <scope>test</scope>
             </dependency>
 
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-contract-wiremock</artifactId>
+                <version>${spring-cloud-contract.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.tomakehurst</groupId>
+                <artifactId>wiremock</artifactId>
+                <version>${wiremock.version}</version>
+                <scope>test</scope>
+            </dependency>
+
             <!-- Cucumber -->
             <dependency>
                 <groupId>io.cucumber</groupId>
                 <artifactId>cucumber-core</artifactId>
-                <version>${cucumber.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.cucumber</groupId>
-                <artifactId>cucumber-java</artifactId>
                 <version>${cucumber.version}</version>
             </dependency>
 
@@ -580,6 +626,11 @@
                             <version>${junit.jupiter.version}</version>
                         </dependency>
                         <dependency>
+                            <groupId>org.junit.vintage</groupId>
+                            <artifactId>junit-vintage-engine</artifactId>
+                            <version>${junit.jupiter.version}</version>
+                        </dependency>
+                        <dependency>
                             <groupId>org.slf4j</groupId>
                             <artifactId>slf4j-api</artifactId>
                             <version>${slf4j.version}</version>
@@ -606,6 +657,17 @@
                         </includes>
                     </configuration>
                 </plugin>
+
+                <!--plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>${maven-shade.version}</version>
+                    <configuration>
+                        <createDependencyReducedPom>false</createDependencyReducedPom>
+                        <shadedArtifactAttached>true</shadedArtifactAttached>
+                        <shadedClassifierName>aws</shadedClassifierName>
+                    </configuration>
+                </plugin-->
 
                 <!--plugin>
                    <groupId>org.apache.maven.plugins</groupId>
@@ -728,9 +790,6 @@
                     <configuration>
                         <repository>iorek/iorek-${application.name}</repository>
                         <tag>${project.version}</tag>
-                        <buildArgs>
-                            <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
-                        </buildArgs>
                     </configuration>
                 </plugin>
 
@@ -929,7 +988,7 @@
                         <configuration>
                             <failWhenNoMutations>false</failWhenNoMutations>
                             <targetClasses>
-                                <param>io.firefly.*</param>
+                                <param>com.stuartbeard.iorek.*</param>
                             </targetClasses>
                             <excludedClasses>
                                 <param>**.*Test.java</param>

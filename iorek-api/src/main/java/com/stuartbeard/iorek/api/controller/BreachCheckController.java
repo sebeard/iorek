@@ -15,7 +15,7 @@ import static com.stuartbeard.iorek.api.descriptions.APIDescriptions.*;
 @RestController
 @RequestMapping("breach-check")
 @Api(value = BREACH_CHECK_NAME,
-    produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+    produces = MediaType.APPLICATION_JSON_VALUE,
     description = BREACH_CHECK_DESC,
     tags = {"breaches"}
 )
@@ -24,7 +24,7 @@ public class BreachCheckController {
 
     private BreachCheckService breachCheckService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = GET_IDENTITY_INFO_DESC, response = IdentityInformation.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = API_200_MESSAGE, response = IdentityInformation.class),
