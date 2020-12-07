@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd"
+              xsi:schemaLocation="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    <suppress>
+        <notes>
+            <![CDATA[Reason: We are using a version of logback later than 1.1.10, File name: logback-json-classic-0.1.5.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/ch\.qos\.logback\.contrib/logback\-json\-classic@.*$</packageUrl>
+        <cve>CVE-2017-5929</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[Reason: We are using a version of logback later than 1.1.10, File name: logback-json-core-0.1.5.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/ch\.qos\.logback\.contrib/logback\-json\-core@.*$</packageUrl>
+        <cve>CVE-2017-5929</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[Reason: We are using a version of logback later than 1.1.10, File name: io.firefly.ext:ffio-ext-logback:1.0.0-SNAPSHOT]]></notes>
+        <sha1>0230b51d76152f9fe0f6e70d5321a84a144ef244</sha1>
+        <cve>CVE-2017-5929</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[Reason: We are using a version of wiremock later than 2.16.0, File name: io.firefly.ext:ffio-ext-test-spring-wiremock:1.0.0-SNAPSHOT]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.firefly\.ext/ffio\-ext\-test\-spring\-wiremock@.*$</packageUrl>
+        <cve>CVE-2018-9116</cve>
+        <cve>CVE-2018-9117</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[Reason: We are using a version of wiremock later than 2.16.0, File name: spring-cloud-contract-wiremock-2.2.4.RELEASE.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.cloud/spring\-cloud\-contract\-wiremock@.*$
+        </packageUrl>
+        <cve>CVE-2018-9116</cve>
+        <cve>CVE-2018-9117</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[Reason: NEED A REASON, File name: cdi-api-1.2.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/javax\.enterprise/cdi\-api@.*$</packageUrl>
+        <cve>CVE-2014-8122</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[Reason: We use a Spring Framework version later than 5.0.5.RELEASE, File name: spring-security-rsa-1.0.9.RELEASE.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-rsa@.*$</packageUrl>
+        <cve>CVE-2018-1258</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[Reason: We use a Spring Framework version later than 5.0.5.RELEASE, File name: spring-security-core-5.3.2.RELEASE.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-core@.*$</packageUrl>
+        <cve>CVE-2018-1258</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[Reason: We use a Spring Framework version later than 5.0.5.RELEASE, File name: spring-security-web-5.3.3.RELEASE.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-web@.*$</packageUrl>
+        <cve>CVE-2018-1258</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[Reason: We are using a version of wiremock later than 2.16.0, File name: io.firefly.ext:ffio-ext-test-wiremock:1.0.0-SNAPSHOT]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.firefly\.ext/ffio\-ext\-test\-wiremock@.*$</packageUrl>
+        <cve>CVE-2018-9116</cve>
+        <cve>CVE-2018-9117</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[Reason: We use a Spring Framework version later than 5.0.5.RELEASE, File name: spring-security-config-5.3.2.RELEASE.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-config@.*$</packageUrl>
+        <cve>CVE-2018-1258</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[Reason: We use a Spring Framework version later than 5.0.5.RELEASE, File name: spring-security-crypto-5.3.3.RELEASE.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@.*$</packageUrl>
+        <cve>CVE-2018-1258</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[Reason: This CVE does not appear to apply to SLF4J here, File name: io.firefly.ext:ffio-ext-slf4j:1.0.0-SNAPSHOT]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.firefly\.ext/ffio\-ext\-slf4j@.*$</packageUrl>
+        <cve>CVE-2018-8088</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[Reason: Wiremock is only used for testing purposes and jQuery is never used in this context, File name: wiremock-jre8-standalone-2.27.1.jar: jquery-3.4.1.min.js]]></notes>
+        <packageUrl regex="true">^pkg:javascript/jquery@.*$</packageUrl>
+        <cve>CVE-2020-11022</cve>
+        <cve>CVE-2020-11023</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[Reason: Imported by a Third Party JAR used for testing purposes. Third Party at highest version already and risk is low due to usage, File name: commons-beanutils-1.9.2.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/commons\-beanutils/commons\-beanutils@.*$</packageUrl>
+        <cve>CVE-2019-10086</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[Reason: Imported by a Third Party JAR used for testing purposes. Third Party at highest version already and risk is low due to usage, File name: commons-collections-3.2.1.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/commons\-collections/commons\-collections@.*$</packageUrl>
+        <cve>CVE-2015-6420</cve>
+        <cve>CVE-2017-15708</cve>
+        <vulnerabilityName>Remote code execution</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[Reason: Imported by Jackson and at version 1.3.72 (1.3.7x not impacted). Jackson is at highest current version and we will continue to keep Jackson upgraded, File name: kotlin-stdlib-common-1.3.70.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-stdlib\-common@.*$</packageUrl>
+        <cve>CVE-2020-15824</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[Reason: Imported by Jackson and at version 1.3.72 (1.3.7x not impacted). Jackson is at highest current version and we will continue to keep Jackson upgraded, File name: kotlin-stdlib-1.3.72.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-stdlib@.*$</packageUrl>
+        <cve>CVE-2020-15824</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[Reason: Imported by Jackson and at version 1.3.72 (1.3.7x not impacted). Jackson is at highest current version and we will continue to keep Jackson upgraded, File name: kotlin-reflect-1.3.72.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-reflect@.*$</packageUrl>
+        <cve>CVE-2020-15824</cve>
+    </suppress>
+</suppressions>

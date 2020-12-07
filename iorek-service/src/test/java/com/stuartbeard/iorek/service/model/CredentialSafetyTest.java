@@ -1,9 +1,8 @@
 package com.stuartbeard.iorek.service.model;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import org.force66.beantester.BeanTester;
 import org.junit.jupiter.api.Test;
-import org.meanbean.test.BeanTester;
-import org.meanbean.test.EqualsMethodTester;
-import org.meanbean.test.HashCodeMethodTester;
 
 class CredentialSafetyTest {
 
@@ -14,12 +13,9 @@ class CredentialSafetyTest {
 
     @Test
     void shouldHaveValidEqualsMethod() {
-        new EqualsMethodTester().testEqualsMethod(CredentialSafety.class);
-    }
-
-    @Test
-    void shouldHaveValidHashCodeMethod() {
-        new HashCodeMethodTester().testHashCodeMethod(CredentialSafety.class);
+        EqualsVerifier.simple()
+            .forClass(CredentialSafety.class)
+            .verify();
     }
 
 }

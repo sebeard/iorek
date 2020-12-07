@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Accessors(chain = true)
@@ -17,7 +17,7 @@ public class Paste {
     @JsonProperty("Title")
     private String title;
     @JsonProperty("Date")
-    private Date date;
+    private LocalDate date;
     @JsonProperty("EmailCount")
     private Integer emailCount;
 }

@@ -1,25 +1,24 @@
 package com.stuartbeard.iorek.service.model;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import org.force66.beantester.BeanTester;
 import org.junit.jupiter.api.Test;
-import org.meanbean.test.BeanTester;
-import org.meanbean.test.EqualsMethodTester;
-import org.meanbean.test.HashCodeMethodTester;
+
+import java.time.LocalDate;
 
 class PasteInformationTest {
 
     @Test
     void shouldHaveValidGettersAndSetters() {
-        new BeanTester().testBean(PasteInformation.class);
+        BeanTester beanTester = new BeanTester();
+        beanTester.addTestValues(LocalDate.class, new Object[]{LocalDate.parse("2020-12-03"), LocalDate.parse("2019-01-26")});
+        beanTester.testBean(PasteInformation.class);
     }
 
     @Test
     void shouldHaveValidEqualsMethod() {
-        new EqualsMethodTester().testEqualsMethod(PasteInformation.class);
+        EqualsVerifier.simple()
+            .forClass(PasteInformation.class)
+            .verify();
     }
-
-    @Test
-    void shouldHaveValidHashCodeMethod() {
-        new HashCodeMethodTester().testHashCodeMethod(PasteInformation.class);
-    }
-
 }

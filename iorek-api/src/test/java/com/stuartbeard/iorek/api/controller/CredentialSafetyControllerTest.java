@@ -4,7 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.stuartbeard.iorek.api.Application;
-import com.stuartbeard.iorek.api.model.Message;
+import com.stuartbeard.iorek.api.config.ApplicationConfiguration;
+import com.stuartbeard.iorek.api.model.ErrorResponse;
 import com.stuartbeard.iorek.external.hibp.exception.PwnedPasswordsServiceException;
 import com.stuartbeard.iorek.service.PasswordCheckingService;
 import com.stuartbeard.iorek.service.model.CredentialSafety;
@@ -24,10 +25,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @WebMvcTest
-@ContextConfiguration(classes = Application.class)
+@ContextConfiguration(classes = {Application.class, ApplicationConfiguration.class})
 class CredentialSafetyControllerTest {
 
     private static final String PASSWORD = "password";
@@ -68,6 +70,6 @@ class CredentialSafetyControllerTest {
 
         controller.perform(request)
             .andExpect(status().isGatewayTimeout())
-            .andExpect(content().json(asJson(new Message("Service Unavailable"))));
+            .andExpect(content().json(asJson(new ErrorResponse("Service Unavailable"))));
     }
 }

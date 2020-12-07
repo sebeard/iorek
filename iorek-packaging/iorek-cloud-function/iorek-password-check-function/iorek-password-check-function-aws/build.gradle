@@ -1,0 +1,45 @@
+plugins {
+    id 'maven-publish'
+    id 'io.spring.dependency-management'
+    id 'org.springframework.boot'
+    id 'org.springframework.boot.experimental.thin-launcher'
+    id 'com.github.johnrengelman.shadow'
+}
+
+import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer
+
+dependencies {
+    api project(':iorek-password-check-function-core')
+
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-function-adapter-aws', version: "${springCloudFunctionVersion}"
+
+    runtimeOnly group: 'com.squareup.okhttp3', name: 'okhttp', version: "${okhttpVersion}"
+
+    compileOnly group: 'com.amazonaws', name: 'aws-lambda-java-events', version: "${awsLambdaEventsVersion}"
+    compileOnly group: 'com.amazonaws', name: 'aws-lambda-java-log4j', version: "${awsLambdaLog4jVersion}"
+}
+
+springBoot {
+    mainClass = 'com.stuartbeard.iorek.function.passwordcheck.CloudFunction'
+}
+
+shadowJar {
+    archiveClassifier.set('aws')
+    dependencies {
+        exclude(dependency("org.springframework.cloud:spring-cloud-function-web:${springCloudFunctionVersion}"))
+    }
+    // Required for Spring
+    mergeServiceFiles()
+    append 'META-INF/spring.handlers'
+    append 'META-INF/spring.schemas'
+    append 'META-INF/spring.tooling'
+    transform(PropertiesFileTransformer) {
+        paths = ['META-INF/spring.factories']
+        mergeStrategy = "append"
+    }
+}
+
+tasks.assemble.dependsOn shadowJar
+tasks.assemble.dependsOn thinJar
+
+description = 'iorek-password-check-function-aws'

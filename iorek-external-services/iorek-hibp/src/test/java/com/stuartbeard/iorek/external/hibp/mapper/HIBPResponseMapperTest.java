@@ -4,18 +4,20 @@ import com.stuartbeard.iorek.external.hibp.model.Breach;
 import com.stuartbeard.iorek.external.hibp.model.Paste;
 import com.stuartbeard.iorek.service.model.BreachInformation;
 import com.stuartbeard.iorek.service.model.PasteInformation;
-import org.joda.time.DateTime;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class HIBPResponseMapperTest {
 
-    private static final DateTime NOW = DateTime.now();
+    private static final LocalDate LOCAL_DATE = LocalDate.now();
+    private static final ZonedDateTime ZONED_DATE_TIME = ZonedDateTime.now();
     private static final int EMAIL_COUNT = 1000;
     private static final String SOURCE = "source";
     private static final String TITLE = "title";
@@ -32,7 +34,7 @@ class HIBPResponseMapperTest {
     private static final String DOMAIN = "domain.com";
     private static final String NAME = "name";
 
-    private HIBPResponseMapper mapper = HIBPResponseMapper.MAPPER;
+    private final HIBPResponseMapper mapper = Mappers.getMapper(HIBPResponseMapper.class);
 
     @Test
     void shouldMapPasteToPasteInformation() {
@@ -40,7 +42,7 @@ class HIBPResponseMapperTest {
 
         PasteInformation pasteInformation = mapper.fromPaste(paste);
 
-        assertThat(pasteInformation.getTitle(), is(TITLE));
+        assertThat(pasteInformation.getTitle()).isEqualTo(TITLE);
     }
 
     @Test
@@ -48,7 +50,7 @@ class HIBPResponseMapperTest {
 
         PasteInformation pasteInformation = mapper.fromPaste(null);
 
-        assertThat(pasteInformation, is(nullValue()));
+        assertThat(pasteInformation).isNull();
     }
 
     @Test
@@ -57,9 +59,9 @@ class HIBPResponseMapperTest {
 
         BreachInformation breachInformation = mapper.fromBreach(breach);
 
-        assertThat(breachInformation.getName(), is(NAME));
-        assertThat(breachInformation.getDomain(), is(DOMAIN));
-        assertThat(breachInformation.getInformationBreached(), is(DATA_CLASSES));
+        assertThat(breachInformation.getName()).isEqualTo(NAME);
+        assertThat(breachInformation.getDomain()).isEqualTo(DOMAIN);
+        assertThat(breachInformation.getInformationBreached()).isEqualTo(DATA_CLASSES);
     }
 
     @Test
@@ -67,7 +69,7 @@ class HIBPResponseMapperTest {
 
         BreachInformation breachInformation = mapper.fromBreach(null);
 
-        assertThat(breachInformation, is(nullValue()));
+        assertThat(breachInformation).isNull();
     }
 
     @Test
@@ -76,9 +78,9 @@ class HIBPResponseMapperTest {
 
         List<PasteInformation> pasteInformationList = mapper.fromPastes(pastes);
 
-        assertThat(pasteInformationList, hasSize(2));
+        assertThat(pasteInformationList).hasSize(2);
         pasteInformationList.forEach(
-            pasteInformation -> assertThat(pasteInformation.getTitle(), is(TITLE))
+            pasteInformation -> assertThat(pasteInformation.getTitle()).isEqualTo(TITLE)
         );
     }
 
@@ -87,7 +89,7 @@ class HIBPResponseMapperTest {
 
         List<PasteInformation> pasteInformationList = mapper.fromPastes(null);
 
-        assertThat(pasteInformationList, is(nullValue()));
+        assertThat(pasteInformationList).isNull();
     }
 
     @Test
@@ -96,12 +98,12 @@ class HIBPResponseMapperTest {
 
         List<BreachInformation> breachInformationList = mapper.fromBreaches(breaches);
 
-        assertThat(breachInformationList, hasSize(2));
+        assertThat(breachInformationList).hasSize(2);
         breachInformationList.forEach(
             breachInformation -> {
-                assertThat(breachInformation.getName(), is(NAME));
-                assertThat(breachInformation.getDomain(), is(DOMAIN));
-                assertThat(breachInformation.getInformationBreached(), is(DATA_CLASSES));
+                assertThat(breachInformation.getName()).isEqualTo(NAME);
+                assertThat(breachInformation.getDomain()).isEqualTo(DOMAIN);
+                assertThat(breachInformation.getInformationBreached()).isEqualTo(DATA_CLASSES);
             }
         );
     }
@@ -111,7 +113,7 @@ class HIBPResponseMapperTest {
 
         List<BreachInformation> breachInformationList = mapper.fromBreaches(null);
 
-        assertThat(breachInformationList, is(nullValue()));
+        assertThat(breachInformationList).isNull();
     }
 
     private Paste generatePaste() {
@@ -120,7 +122,7 @@ class HIBPResponseMapperTest {
             .setTitle(TITLE)
             .setSource(SOURCE)
             .setEmailCount(EMAIL_COUNT)
-            .setDate(NOW.toDate());
+            .setDate(LOCAL_DATE);
     }
 
     private Breach generateBreach() {
@@ -136,9 +138,9 @@ class HIBPResponseMapperTest {
             .setFabricated(FABRICATED)
             .setSensitive(SENSITIVE)
             .setSpamList(SPAM_LIST)
-            .setAddedDate(NOW.toDate())
-            .setBreachDate(NOW.toDate())
-            .setModifiedDate(NOW.toDate())
+            .setAddedDate(ZONED_DATE_TIME)
+            .setBreachDate(LOCAL_DATE)
+            .setModifiedDate(ZONED_DATE_TIME)
             .setDataClasses(DATA_CLASSES);
     }
 

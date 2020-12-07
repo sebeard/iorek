@@ -6,14 +6,11 @@ import com.stuartbeard.iorek.service.model.BreachInformation;
 import com.stuartbeard.iorek.service.model.PasteInformation;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
 @Mapper
 public interface HIBPResponseMapper {
-
-    HIBPResponseMapper MAPPER = Mappers.getMapper(HIBPResponseMapper.class);
 
     @Mapping(target = "informationBreached", source = "dataClasses")
     BreachInformation fromBreach(Breach breach);

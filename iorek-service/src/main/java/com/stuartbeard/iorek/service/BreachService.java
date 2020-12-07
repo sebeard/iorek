@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface BreachService {
 
-    int getAppearanceCount(@Nonnull String password, boolean isSha1Hash);
-
     List<BreachInformation> getBreachInformation(@Nonnull String emailAddress);
 
     List<PasteInformation> getPasteInformation(@Nonnull String emailAddress);

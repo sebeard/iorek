@@ -9,15 +9,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 
-import java.sql.Date;
-import java.time.Instant;
+import java.time.LocalDate;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @MockitoSettings
 class BreachCheckServiceTest {
@@ -25,13 +24,13 @@ class BreachCheckServiceTest {
     private static final String MESSAGE = "Your email address appeared in %d known data breaches, and %d pastes.";
     private static final String EMAIL = "someone@test.com";
     private static final BreachInformation BREACH = new BreachInformation()
-        .setBreachDate(Date.from(Instant.now()))
+        .setBreachDate(LocalDate.now())
         .setDomain("https://www.example.com")
         .setName("Breach Example")
         .setInformationBreached(singletonList("Passwords"));
     private static final PasteInformation PASTE = new PasteInformation()
         .setTitle("Paste Example")
-        .setAdded(Date.from(Instant.now()));
+        .setAdded(LocalDate.now());
 
     @Mock
     private BreachService breachService;
@@ -57,12 +56,14 @@ class BreachCheckServiceTest {
 
         verify(breachService).getBreachInformation(EMAIL);
         verify(breachService).getPasteInformation(EMAIL);
-        //assertThat(identityInfo.getChecked(), is(0));
-        assertThat(identityInfo.getMessage(), is(expectedMessage(1, 1)));
-        assertThat(identityInfo.getBreaches(), hasSize(1));
-        assertThat(identityInfo.getBreaches(), contains(BREACH));
-        assertThat(identityInfo.getPastes(), hasSize(1));
-        assertThat(identityInfo.getPastes(), contains(PASTE));
+        //assertThat(identityInfo.getChecked()).isEqualTo(0);
+        assertThat(identityInfo.getMessage()).isEqualTo(expectedMessage(1, 1));
+        assertThat(identityInfo.getBreaches())
+            .hasSize(1)
+            .contains(BREACH);
+        assertThat(identityInfo.getPastes())
+            .hasSize(1)
+            .contains(PASTE);
     }
 
     @Test
@@ -74,11 +75,12 @@ class BreachCheckServiceTest {
 
         verify(breachService).getBreachInformation(EMAIL);
         verify(breachService).getPasteInformation(EMAIL);
-        //assertThat(identityInfo.getChecked(), is(0));
-        assertThat(identityInfo.getMessage(), is(expectedMessage(1, 0)));
-        assertThat(identityInfo.getBreaches(), hasSize(1));
-        assertThat(identityInfo.getBreaches(), contains(BREACH));
-        assertThat(identityInfo.getPastes(), hasSize(0));
+        //assertThat(identityInfo.getChecked()).isEqualTo(0);
+        assertThat(identityInfo.getMessage()).isEqualTo(expectedMessage(1, 0));
+        assertThat(identityInfo.getBreaches())
+            .hasSize(1)
+            .contains(BREACH);
+        assertThat(identityInfo.getPastes()).isEmpty();
     }
 
     @Test
@@ -90,11 +92,12 @@ class BreachCheckServiceTest {
 
         verify(breachService).getBreachInformation(EMAIL);
         verify(breachService).getPasteInformation(EMAIL);
-        //assertThat(identityInfo.getChecked(), is(0));
-        assertThat(identityInfo.getMessage(), is(expectedMessage(0, 1)));
-        assertThat(identityInfo.getBreaches(), hasSize(0));
-        assertThat(identityInfo.getPastes(), hasSize(1));
-        assertThat(identityInfo.getPastes(), contains(PASTE));
+        //assertThat(identityInfo.getChecked()).isEqualTo(0);
+        assertThat(identityInfo.getMessage()).isEqualTo(expectedMessage(0, 1));
+        assertThat(identityInfo.getBreaches()).isEmpty();
+        assertThat(identityInfo.getPastes())
+            .hasSize(1)
+            .contains(PASTE);
 
     }
 
@@ -107,9 +110,9 @@ class BreachCheckServiceTest {
 
         verify(breachService).getBreachInformation(EMAIL);
         verify(breachService).getPasteInformation(EMAIL);
-        //assertThat(identityInfo.getChecked(), is(0));
-        assertThat(identityInfo.getMessage(), is(expectedMessage(0, 0)));
-        assertThat(identityInfo.getBreaches(), hasSize(0));
-        assertThat(identityInfo.getPastes(), hasSize(0));
+        //assertThat(identityInfo.getChecked()).isEqualTo(0);
+        assertThat(identityInfo.getMessage()).isEqualTo(expectedMessage(0, 0));
+        assertThat(identityInfo.getBreaches()).isEmpty();
+        assertThat(identityInfo.getPastes()).isEmpty();
     }
 }

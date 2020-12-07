@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
@@ -21,13 +22,13 @@ public class Breach {
     private String domain;
 
     @JsonProperty("BreachDate")
-    private Date breachDate;
+    private LocalDate breachDate;
 
     @JsonProperty("AddedDate")
-    private Date addedDate;
+    private ZonedDateTime addedDate;
 
     @JsonProperty("ModifiedDate")
-    private Date modifiedDate;
+    private ZonedDateTime modifiedDate;
 
     @JsonProperty("PwnCount")
     private Integer pwnCount;

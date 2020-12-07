@@ -24,9 +24,7 @@ import java.util.List;
 import static feign.Util.RETRY_AFTER;
 import static feign.error.AnnotationErrorDecoder.builderFor;
 import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasSize;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -36,9 +34,11 @@ import static org.mockito.Mockito.verify;
 class HIBPServiceTest {
 
     private static final String EMAIL = "someone@test.com";
+
     @Spy
     Client client = new Client.Default(null, null);
-    private MockWebServer hibpApi = new MockWebServer();
+
+    private final MockWebServer hibpApi = new MockWebServer();
     private HIBPService hibpService;
 
     private static Breach generateBreach() {
@@ -134,8 +134,9 @@ class HIBPServiceTest {
 
         List<Breach> breaches = hibpService.getBreaches(EMAIL);
 
-        assertThat(breaches, hasSize(3));
-        assertThat(breaches, contains(breach1, breach2, breach3));
+        assertThat(breaches)
+            .hasSize(3)
+            .contains(breach1, breach2, breach3);
     }
 
     @Test
@@ -150,8 +151,9 @@ class HIBPServiceTest {
 
         List<Paste> pastes = hibpService.getPastes(EMAIL);
 
-        assertThat(pastes, hasSize(3));
-        assertThat(pastes, contains(paste1, paste2, paste3));
+        assertThat(pastes)
+            .hasSize(3)
+            .contains(paste1, paste2, paste3);
     }
 
 

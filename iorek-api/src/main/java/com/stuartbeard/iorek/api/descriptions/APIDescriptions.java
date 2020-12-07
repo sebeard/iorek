@@ -15,11 +15,9 @@ public class APIDescriptions {
     // Credential Safety API
     public static final String GET_CREDENTIAL_SAFETY_DESC = "Used to obtain the safety of using a specific password as a credential.";
     public static final String CREDENTIAL_SAFETY_NAME = "Credential Safety Endpoints";
-    public static final String CREDENTIAL_SAFETY_DESC = "Provides insights into the safety of a proposed credential.";
 
     // Breach Check API
     public static final String GET_IDENTITY_INFO_DESC = "Used to obtain the breach/paste information around an email address.";
     public static final String BREACH_CHECK_NAME = "Breach Information Endpoints";
-    public static final String BREACH_CHECK_DESC = "Provides information around data breaches and pastes.";
 
 }

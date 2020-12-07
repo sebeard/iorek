@@ -3,7 +3,7 @@ package com.stuartbeard.iorek.service.model;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -12,6 +12,6 @@ public class BreachInformation {
 
     private String name;
     private String domain;
-    private Date breachDate;
+    private LocalDate breachDate;
     private List<String> informationBreached;
 }

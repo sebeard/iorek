@@ -2,33 +2,27 @@ package com.stuartbeard.iorek.external.hibp;
 
 import com.stuartbeard.iorek.external.hibp.exception.HIBPNotFoundException;
 import com.stuartbeard.iorek.external.hibp.exception.HIBPTooManyRequestsException;
+import com.stuartbeard.iorek.external.hibp.mapper.HIBPResponseMapper;
 import com.stuartbeard.iorek.external.hibp.model.Breach;
 import com.stuartbeard.iorek.external.hibp.model.Paste;
 import com.stuartbeard.iorek.external.hibp.service.HIBPService;
-import com.stuartbeard.iorek.external.hibp.service.PwnedPasswordsService;
 import com.stuartbeard.iorek.service.model.BreachInformation;
 import com.stuartbeard.iorek.service.model.PasteInformation;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 
-import java.time.Instant;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 import static feign.Util.RETRY_AFTER;
 import static java.util.Arrays.asList;
-import static java.util.Collections.*;
-import static org.apache.commons.codec.digest.DigestUtils.sha1Hex;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static java.util.Collections.singletonList;
+import static java.util.Collections.singletonMap;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,69 +30,26 @@ import static org.mockito.Mockito.when;
 @MockitoSettings
 class HIBPClientTest {
 
-    private static final Function<String, String> HASH_FUNCTION = DigestUtils::sha1Hex;
-    private static final String PASSWORD = "password";
     private static final String EMAIL = "someone@test.com";
-    private static final int PREFIX_LENGTH = 5;
     private static final String PASTE_TITLE = "PasteTitle";
     private static final String BREACH_NAME = "BreachName";
     private static final String BREACH_TITLE = "BreachTitle";
     private static final String BREACH_DOMAIN = "BreachDomain";
     private static final String DATA_CLASS_1 = "DataClass1";
     private static final String DATA_CLASS_2 = "DataClass2";
-    private static final Date BREACH_DATE = Date.from(Instant.now());
-    private static final Date ADDED_DATE = Date.from(Instant.now());
-    private static final Date MODIFIED_DATE = Date.from(Instant.now());
-    private static final Date PASTE_DATE = Date.from(Instant.now());
-
-    @Mock
-    private PwnedPasswordsService pwnedPasswordsService;
+    private static final LocalDate BREACH_DATE = LocalDate.now();
+    private static final ZonedDateTime ADDED_DATE = ZonedDateTime.now();
+    private static final ZonedDateTime MODIFIED_DATE = ZonedDateTime.now();
+    private static final LocalDate PASTE_DATE = LocalDate.now();
 
     @Mock
     private HIBPService hibpService;
 
     private HIBPClient hibpClient;
 
-    private static String hashPrefix() {
-        return HASH_FUNCTION.apply(PASSWORD).substring(0, PREFIX_LENGTH).toUpperCase();
-    }
-
-    private static String hashSuffix() {
-        return HASH_FUNCTION.apply(PASSWORD).substring(PREFIX_LENGTH).toUpperCase();
-    }
-
     @BeforeEach
     void setupHIBPClient() {
-        hibpClient = new HIBPClient(pwnedPasswordsService, hibpService, HASH_FUNCTION, PREFIX_LENGTH);
-    }
-
-    private static Stream<Arguments> inputs() {
-        return Stream.of(
-            Arguments.of(PASSWORD, false),
-            Arguments.of(sha1Hex(PASSWORD), true)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("inputs")
-    void shouldReturnCountWhenPasswordHashFoundInDataSet(String input, boolean sha1Hash) {
-        when(pwnedPasswordsService.getMatchingSuffixes(hashPrefix())).thenReturn(singletonList(hashSuffix() + ":999999"));
-
-        int count = hibpClient.getAppearanceCount(input, sha1Hash);
-
-        verify(pwnedPasswordsService).getMatchingSuffixes(hashPrefix());
-        assertThat(count, is(999999));
-    }
-
-    @ParameterizedTest
-    @MethodSource("inputs")
-    void shouldReturnZeroWhenPasswordHashNotFoundInDataSet(String input, boolean sha1Hash) {
-        when(pwnedPasswordsService.getMatchingSuffixes(hashPrefix())).thenReturn(emptyList());
-
-        int count = hibpClient.getAppearanceCount(input, sha1Hash);
-
-        verify(pwnedPasswordsService).getMatchingSuffixes(hashPrefix());
-        assertThat(count, is(0));
+        hibpClient = new HIBPClient(hibpService, Mappers.getMapper(HIBPResponseMapper.class));
     }
 
     private static Breach generateBreach() {
@@ -142,8 +93,9 @@ class HIBPClientTest {
         List<BreachInformation> breachInformation = hibpClient.getBreachInformation(EMAIL);
 
         verify(hibpService).getBreaches(EMAIL);
-        assertThat(breachInformation, hasSize(1));
-        assertThat(breachInformation, contains(expectedBreahcInformation));
+        assertThat(breachInformation)
+            .hasSize(1)
+            .contains(expectedBreahcInformation);
     }
 
     @Test
@@ -153,7 +105,7 @@ class HIBPClientTest {
         List<BreachInformation> breachInformation = hibpClient.getBreachInformation(EMAIL);
 
         verify(hibpService).getBreaches(EMAIL);
-        assertThat(breachInformation, hasSize(0));
+        assertThat(breachInformation).isEmpty();
     }
 
     @Test
@@ -176,8 +128,9 @@ class HIBPClientTest {
         List<PasteInformation> pasteInformation = hibpClient.getPasteInformation(EMAIL);
 
         verify(hibpService).getPastes(EMAIL);
-        assertThat(pasteInformation, hasSize(1));
-        assertThat(pasteInformation, contains(expectedPasteInformation));
+        assertThat(pasteInformation)
+            .hasSize(1)
+            .contains(expectedPasteInformation);
     }
 
     @Test
@@ -187,7 +140,7 @@ class HIBPClientTest {
         List<PasteInformation> pasteInformation = hibpClient.getPasteInformation(EMAIL);
 
         verify(hibpService).getPastes(EMAIL);
-        assertThat(pasteInformation, hasSize(0));
+        assertThat(pasteInformation).isEmpty();
     }
 
     @Test

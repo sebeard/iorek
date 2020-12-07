@@ -11,20 +11,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.cloud.function.context.FunctionCatalog;
 import org.springframework.cloud.function.context.test.FunctionalSpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Flux;
 
 import java.util.function.Function;
 
-import static java.util.Collections.emptyList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static reactor.core.publisher.Flux.just;
 
 @ExtendWith(SpringExtension.class)
-@FunctionalSpringBootTest(classes = {CloudFunction.class, HIBPConfig.class})
-@AutoConfigureWireMock
+@FunctionalSpringBootTest(classes = {CloudFunction.class, FunctionConfiguration.class})
+@AutoConfigureWireMock(port = 8890)
+@DirtiesContext
 class BreachFunctionFunctionalTest {
 
     @Autowired
@@ -41,40 +41,41 @@ class BreachFunctionFunctionalTest {
     void shouldShowBothBreachesAndPastesForGivenEmail() {
         IdentityInformation actualIdentityInformation = breachFunction.apply(just("breachandpaste@email.com")).blockFirst();
 
-        assertThat(actualIdentityInformation, is((notNullValue())));
-        assertThat(actualIdentityInformation.getPastes(), hasSize(2));
-        assertThat(actualIdentityInformation.getBreaches(), hasSize(2));
-        assertThat(actualIdentityInformation.getMessage(), is("Your email address appeared in 2 known data breaches, and 2 pastes."));
+        assertThat(actualIdentityInformation).isNotNull();
+        assertThat(actualIdentityInformation.getPastes()).hasSize(2);
+        assertThat(actualIdentityInformation.getBreaches()).hasSize(2);
+        assertThat(actualIdentityInformation.getMessage()).isEqualTo("Your email address appeared in 2 known data breaches, and 2 pastes.");
     }
 
     @Test
     void shouldShowOnlyBreachesForGivenEmail() {
         IdentityInformation actualIdentityInformation = breachFunction.apply(just("breachonly@email.com")).blockFirst();
 
-        assertThat(actualIdentityInformation, is((notNullValue())));
-        assertThat(actualIdentityInformation.getPastes(), is(emptyList()));
-        assertThat(actualIdentityInformation.getBreaches(), hasSize(2));
-        assertThat(actualIdentityInformation.getMessage(), is("Your email address appeared in 2 known data breaches, and 0 pastes."));
+        assertThat(actualIdentityInformation).isNotNull();
+        assertThat(actualIdentityInformation.getPastes()).isEmpty();
+        assertThat(actualIdentityInformation.getBreaches()).hasSize(2);
+        assertThat(actualIdentityInformation.getMessage()).isEqualTo("Your email address appeared in 2 known data breaches, and 0 pastes.");
     }
 
     @Test
     void shouldShowOnlyPastesForGivenEmail() {
         IdentityInformation actualIdentityInformation = breachFunction.apply(just("pasteonly@email.com")).blockFirst();
 
-        assertThat(actualIdentityInformation, is((notNullValue())));
-        assertThat(actualIdentityInformation.getPastes(), hasSize(2));
-        assertThat(actualIdentityInformation.getBreaches(), is(emptyList()));
-        assertThat(actualIdentityInformation.getMessage(), is("Your email address appeared in 0 known data breaches, and 2 pastes."));
+        assertThat(actualIdentityInformation).isNotNull();
+        assertThat(actualIdentityInformation.getPastes()).hasSize(2);
+        assertThat(actualIdentityInformation.getBreaches()).isEmpty();
+        assertThat(actualIdentityInformation.getMessage()).isEqualTo("Your email address appeared in 0 known data breaches, and 2 pastes.");
     }
 
     @Test
     void shouldShowOnlyNoBreachesOrPastesForGivenEmail() {
-        IdentityInformation actualIdentityInformation = breachFunction.apply(just("nothing@email.com")).blockFirst();
+        Flux<String> notBreachedOrPasted = just("nothing@email.com");
+        IdentityInformation actualIdentityInformation = breachFunction.apply(notBreachedOrPasted).blockFirst();
 
-        assertThat(actualIdentityInformation, is((notNullValue())));
-        assertThat(actualIdentityInformation.getPastes(), is(emptyList()));
-        assertThat(actualIdentityInformation.getBreaches(), is(emptyList()));
-        assertThat(actualIdentityInformation.getMessage(), is("Your email address appeared in 0 known data breaches, and 0 pastes."));
+        assertThat(actualIdentityInformation).isNotNull();
+        assertThat(actualIdentityInformation.getPastes()).isEmpty();
+        assertThat(actualIdentityInformation.getBreaches()).isEmpty();
+        assertThat(actualIdentityInformation.getMessage()).isEqualTo("Your email address appeared in 0 known data breaches, and 0 pastes.");
     }
 
     @Test

@@ -1,10 +1,11 @@
 # Iorek
 
-Iorek is a Spring Boot REST and Kafka integration against services providing breach data and related insights. 
+Iorek is a set of Spring boot and Spring Cloud function integrations against services providing breach data and related insights. 
 
 It has the capability to check the perceived healthiness of a password; specifically has it been seen in a known leaked 
-credential collection, and if so how many times. It also has the capability to monitor and detect if an email address 
-being used by an individual has appeared in a data breach or a paste.
+credential collection, and if so how many times. 
+
+It also has the capability to monitor and detect if an email address being used by an individual has appeared in a data breach or a paste.
 
 ## Etymology
 
@@ -37,24 +38,86 @@ After the opening of a gate to Cittàgazze changes the climate of Svalbard, Iore
  - HIBP
  - NCSC
  - Philip Pullman
+ 
+## Running 
+  
+## Packaging and Deployment
 
-## How it works
+### Docker Image
 
-## Integrations
+Available on Docker Hub under the image `iorek/iorek-api`. This is a spring boot application which operates a full 
+REST API, and includes Swagger Documentation for testing and/or integration points.
 
-## Configuration
+### Password Check Cloud Function (AWS Lambda)
+
+One of the artifacts produced from the packaging module is a fat jar file - `iorek-breach-function-aws-VERSION-aws.jar` 
+which is deployable to AWS as a Lambda. This can be done manually via the AWS Console, via a CLI command;
+
+
+```text
+aws lambda create-function 
+    --function-name Breach-Check 
+    --role arn:aws:iam::[USERID]:role/service-role/[ROLE] 
+    --zip-file fileb://path/to/iorek-passsword-check-function-aws-VERSION-aws.jar 
+    --handler com.stuartbeard.iorek.function.breach.BreachFunctionHandler
+    --description "Iorek Breach Check Function" 
+    --runtime java8 
+    --region [REGION]
+    --timeout 60 
+    --memory-size 192 
+    --publish
+```
+ 
+or alongside a CloudFormation script. An example CloudFormation script is available in the `/samples` directory.
+
+### Breach Check Cloud Function (AWS Lambda)
+
+One of the artifacts produced from the packaging module is a fat jar file - `iorek-passsword-check-function-aws-VERSION-aws.jar` 
+which is deployable to AWS as a Lambda. This can be done manually via the AWS Console, via a CLI command;
+
+
+```text
+aws lambda create-function 
+    --function-name Password-Check 
+    --role arn:aws:iam::[USERID]:role/service-role/[ROLE] 
+    --zip-file fileb://path/to/iorek-passsword-check-function-aws-VERSION-aws.jar 
+    --handler com.stuartbeard.iorek.function.password.check.PasswordCheckFunctionHandler
+    --description "Iorek Password Check Function" 
+    --runtime java8 
+    --region [REGION]
+    --timeout 60 
+    --memory-size 192 
+    --publish
+```
+ 
+or alongside a CloudFormation script. An example CloudFormation script is available in the `/samples` directory.
+
+## Integrations and Configuration
+
 Using this client integration should require minimum configuration. Most configuration values are defaulted, and the 
 current (and only integration) is set to HIBP.
 
 - `breach.service.name` determines which integration to use. At present that is defaulted to HIBP.
 
-### HIBP Integration (default)
+### HIBP (default)
 
- - `breach.service.name` Enables the HIBP integration (when there is a different default). To enable HIBP this must be set to `hibp` which is the current default.
+ - `breach.service.name` Enables the HIBP integration (if there is a different default). To enable HIBP this must be set to `hibp` which is the current default.
  - `breach.service.url.pp` The API base URL to the Pwned Passwords API. At the time of writing this is `https://api.pwnedpasswords.com` which is the default.
- - `breach.service.url.hibp` The API base URL to the main HIBP API. At the time of writing this is `https://haveibeenpwned.com/api/v2` which is the default.
+ - `breach.service.url.hibp` The API base URL to the main HIBP API. At the time of writing this is `https://haveibeenpwned.com/api/v3` which is the default.
+ - `breach.service.apikey` The Authentication Key required to use the main HIBP API. There is no default, and therefore you will need to purchase a key (for $3.50 a month, not bad at all). See here to purchase a key https://haveibeenpwned.com/API/Key and here to read up on the whys https://www.troyhunt.com/authentication-and-the-have-i-been-pwned-api
  - `breach.service.prefix.length` This the the required prefix length of the Hash provided to the Pwned Passwords REST service. Currently the requirement is for the first 5 characters, so this defaults to `5`.
 
+## Other Configuration
+
+### Environmental Overrides
+
+All configuration can be overridden at a command line level using java properties overrides in the format 
+`-Dproperty.name=value`, for example `-Dbreach.service.apikey=API-KEY-VALUE` sets the HIBP API Key which isn't 
+defaulted, and `-Dcredential.safety.ok.threshold=5` overrides the default of 0 and sets it to 5.
+
+Similarly environment variables can be set to override these values. Configuration properties change format to be come 
+uppercase and underscore delimited, i.e. `credential.safety.warning.message` becomes `CREDENTIAL_SAFETY_WARNING_MESSAGE`.
+ 
 ### Credential Safety
 
 This sets up the messaging and thresholds for how safe a password is considered. 
@@ -75,5 +138,7 @@ been compromised. It is merely a confidence indicator that it is not known wheth
  - `credential.safety.severe.message` The message to return to the caller when an input password has been deemed to be too unsafe to be used, based on the associated threshold.
  - `credential.safety.severe.threshold` Threshold by which a password is considered completely unsafe. Defaults to `0`
  - `credential.safety.preventSevere` Flag that aides the setting the 'passwordAllowed' field in the return object if the severe threshold is exceeded; `false` allows all passwords to be used. Defaults to `true`
+
+
 
 

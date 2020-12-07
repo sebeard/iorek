@@ -1,0 +1,137 @@
+plugins {
+    id 'com.avast.gradle.docker-compose'
+    id 'com.github.ben-manes.versions'
+    id 'com.github.hierynomus.license' apply false
+    id 'com.github.spotbugs'
+    id 'info.solidsoft.pitest'
+    id 'jacoco'
+    id 'org.owasp.dependencycheck'
+    id 'org.sonarqube'
+    id 'io.spring.dependency-management' apply false
+    id 'org.springframework.boot' apply false
+    id 'org.springframework.boot.experimental.thin-launcher' apply false
+    id 'com.github.johnrengelman.shadow' apply false
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+allprojects {
+
+    group 'com.stuartbeard.iorek'
+    version "${majorVersion}.${minorVersion}.${patchVersion}"
+
+    apply plugin: 'java-library'
+    apply plugin: 'com.github.spotbugs'
+    //apply plugin: 'com.github.hierynomus.license'
+    apply plugin: 'info.solidsoft.pitest'
+    apply plugin: 'org.owasp.dependencycheck'
+
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    configurations {
+        commonPlatform
+        compileOnly.extendsFrom(commonPlatform)
+        annotationProcessor.extendsFrom(commonPlatform)
+        testCompileOnly.extendsFrom(commonPlatform)
+        testAnnotationProcessor.extendsFrom(commonPlatform)
+        implementation.extendsFrom(commonPlatform)
+        testFixturesCompileOnly.extendsFrom(commonPlatform)
+        testFixturesAnnotationProcessor.extendsFrom(commonPlatform)
+        testFixturesImplementation.extendsFrom(commonPlatform)
+    }
+
+    dependencies {
+        // Force
+        compile 'org.apache.commons:commons-lang3:3.11'
+
+
+        compileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+        annotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+        testCompileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+        testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+
+        testImplementation group: 'org.assertj', name: 'assertj-core', version: "${assertJVersion}"
+        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: "${junitJupiterVersion}"
+        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: "${junitJupiterVersion}"
+        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: "${mockitoVersion}"
+        testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${junitJupiterVersion}"
+    }
+
+    compileJava {
+        options.compilerArgs << "-Werror"
+        options.compilerArgs << "-Xlint:all"
+        options.compilerArgs << "-Xlint:-try"
+        options.compilerArgs << "-Xlint:-processing"
+    }
+
+//    license {
+//        header rootProject.file('COPYRIGHT')
+//        skipExistingHeaders true
+//        strictCheck false
+//        ext.year = Calendar.getInstance().get(Calendar.YEAR)
+//        mapping {
+//            java = 'SLASHSTAR_STYLE'
+//            xml = 'XML_STYLE'
+//        }
+//    }
+
+    pitest {
+        junit5PluginVersion = "${pitestJunit5ToolVersion}"
+        threads = 4
+        outputFormats = ['XML', 'HTML']
+        timestampedReports = false
+        avoidCallsTo = ['org.slf4j']
+        excludedTestClasses = ['com.stuartbeard.iorek.integration.test.BDDTestSuiteRunner']
+        failWhenNoMutations = false
+        timeoutConstInMillis = 15000
+    }
+
+    spotbugsMain {
+        reports {
+            xml.enabled false
+            html.enabled true
+        }
+        spotbugsTest.enabled = true
+    }
+
+}
+
+configurations {
+    testArtifacts.extendsFrom testRuntime
+}
+
+task testJar(type: Jar) {
+    classifier "test"
+    from sourceSets.test.output
+}
+
+artifacts {
+    testArtifacts testJar
+}
+
+task verify() {
+    subprojects.each {
+        dependsOn(group: '$it.path', name: 'check')
+    }
+    dependsOn ':iorek-api:assemble'
+    dependsOn ':iorek-service:assemble'
+    dependsOn ':iorek-external-services:iorek-hibp:assemble'
+    dependsOn ':iorek-packaging:iorek-hibp:assemble'
+    dependsOn 'sonarqube'
+}
+
+apply from: "${rootDir}/gradle/dependencies.gradle"
+apply from: "${rootDir}/gradle/quality.gradle"

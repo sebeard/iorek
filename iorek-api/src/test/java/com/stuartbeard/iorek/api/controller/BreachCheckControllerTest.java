@@ -2,9 +2,11 @@ package com.stuartbeard.iorek.api.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.StdDateFormat;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.stuartbeard.iorek.api.Application;
-import com.stuartbeard.iorek.api.model.Message;
+import com.stuartbeard.iorek.api.config.ApplicationConfiguration;
+import com.stuartbeard.iorek.api.model.ErrorResponse;
 import com.stuartbeard.iorek.external.hibp.exception.HIBPBadRequestException;
 import com.stuartbeard.iorek.external.hibp.exception.HIBPServiceException;
 import com.stuartbeard.iorek.external.hibp.exception.HIBPTooManyRequestsException;
@@ -23,8 +25,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.time.Clock;
 import java.time.Instant;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.HashMap;
 
 import static java.util.Collections.singletonList;
@@ -36,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @WebMvcTest
-@ContextConfiguration(classes = Application.class)
+@ContextConfiguration(classes = {Application.class, ApplicationConfiguration.class})
 class BreachCheckControllerTest {
 
     private static final String EMAIL_ADDRESS = "someone@test.com";
@@ -50,22 +54,24 @@ class BreachCheckControllerTest {
 
     private static <T> String asJson(T object) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.setDateFormat(new StdDateFormat());
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         return mapper.writeValueAsString(object);
     }
 
     @Test
     void shouldReturnIdentityInformation() throws Exception {
+        Clock fixedClock = Clock.fixed(Instant.now(), ZoneId.of("UTC"));
         IdentityInformation identityInformation = new IdentityInformation()
             .setBreaches(singletonList(new BreachInformation()
-                .setBreachDate(Date.from(Instant.now()))
+                .setBreachDate(LocalDate.now(fixedClock))
                 .setDomain("https://www.example.com")
                 .setName("Breach Example")
                 .setInformationBreached(singletonList("Passwords"))))
             .setPastes(singletonList(new PasteInformation()
                 .setTitle("Paste Example")
-                .setAdded(Date.from(Instant.now()))))
-            .setChecked(Date.from(Instant.now()))
+                .setAdded(LocalDate.now(fixedClock))))
+            .setChecked(LocalDate.now(fixedClock))
             .setMessage("");
         when(breachCheckService.checkIdentity(EMAIL_ADDRESS)).thenReturn(identityInformation);
 
@@ -84,7 +90,7 @@ class BreachCheckControllerTest {
 
         controller.perform(request)
             .andExpect(status().isGatewayTimeout())
-            .andExpect(content().json(asJson(new Message("Service Unavailable"))));
+            .andExpect(content().json(asJson(new ErrorResponse("Service Unavailable"))));
     }
 
     @Test
@@ -95,7 +101,7 @@ class BreachCheckControllerTest {
 
         controller.perform(request)
             .andExpect(status().isTooManyRequests())
-            .andExpect(content().json(asJson(new Message("Too Many Requests"))));
+            .andExpect(content().json(asJson(new ErrorResponse("Too Many Requests"))));
     }
 
     @Test
@@ -106,6 +112,6 @@ class BreachCheckControllerTest {
 
         controller.perform(request)
             .andExpect(status().isBadRequest())
-            .andExpect(content().json(asJson(new Message("Bad Request"))));
+            .andExpect(content().json(asJson(new ErrorResponse("Bad Request"))));
     }
 }
