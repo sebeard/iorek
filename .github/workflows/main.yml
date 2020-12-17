@@ -1,0 +1,129 @@
+name: Develop Branch Build Pipeline
+
+on:
+  # Nightly Run
+  schedule:
+    - cron: '0 1 * * *'
+  # Merge to develop
+  push:
+    branches: ['develop']
+  # Manual Retrigger
+  workflow_dispatch:
+
+env: 
+  slack-status-channel: iorek-alerts 
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+jobs:
+  # Checkout, Setup and Notify
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Notify Slack Start
+        uses: act10ns/slack@v1.2.2
+        with:
+          status: starting
+          channel: ${{ env.slack-status-channel }}
+        if: always()
+      
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 50
+      
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/dependency-check-data
+          key: ${{ runner.os }}-gradle-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+            
+      - name: Set up JDK 1.11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+          
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Set up Gradle
+        run: chmod +x gradlew
+
+      - name: Set PR Number
+        if: github.event_name == 'pull_request'
+        run: |
+          export PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          export PR_NUMBER_OPT="-Dsonar.pullrequest.key=${PR_NUMBER}"
+          # disable command workflow processing
+          echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
+          # log untrusted output
+          echo "::set-env name=PR_NUMBER_OPT::${PR_NUMBER_OPT}"
+          # enable workflow command processing
+          echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
+          
+      - name: Set Branch Name
+        if: github.event_name != 'pull_request'
+        run: |
+          export BRANCH_NAME=$(git branch --show-current)
+          export BRANCH_NAME_OPT="-Dsonar.branch.name=${BRANCH_NAME}"
+          # disable command workflow processing
+          echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
+          # log untrusted output
+          echo "::set-env name=BRANCH_NAME_OPT::${BRANCH_NAME_OPT}"
+          # enable workflow command processing
+          echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
+          
+  functional-test: 
+    runs-on: ubuntu-latest
+    needs: build
+    steps: 
+      - name: Functional Test
+        run: ./gradlew functional-test
+      
+  mutation-test: 
+    runs-on: ubuntu-latest
+    needs: build
+    steps: 
+      - name: Mutation Test
+        run: ./gradlew pitest
+      
+  gatling-test: 
+    runs-on: ubuntu-latest
+    needs: build
+    steps: 
+      - name: Gatling Test
+        run: echo "./gradlew gatling-test"
+     
+  dependency-check: 
+    runs-on: ubuntu-latest
+    needs: build
+    steps: 
+      - name: Dependency Check
+        run: ./gradlew dependency-check
+      
+  sonarqube: 
+    runs-on: ubuntu-latest
+    needs: [functional-test, mutation-test, dependency-check, gatling-test]
+    steps: 
+      - name: Dependency Check
+        run: ./gradlew sonarqube  
+            
+  notify-finish:
+    runs-on: ubuntu-latest
+    needs: sonarqube
+    if: always()
+    steps:
+      - name: Notify Slack Finish
+        uses: act10ns/slack@v1
+        with:
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}
+          channel: ${{ env.slack-status-channel }}
+        if: always()
