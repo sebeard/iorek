@@ -10,8 +10,8 @@ on:
   # Manual Retrigger
   workflow_dispatch:
 
-env: 
-  slack-status-channel: iorek-alerts 
+env:
+  slack-status-channel: iorek-alerts
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Notify Slack Start
@@ -28,14 +28,14 @@ jobs:
           status: starting
           channel: ${{ env.slack-status-channel }}
         if: always()
-      
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
           persist-credentials: false
           fetch-depth: 50
-      
+
       - uses: actions/cache@v2
         with:
           path: |
@@ -44,12 +44,12 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-            
+
       - name: Set up JDK 1.11
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
-          
+
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
 
@@ -67,7 +67,7 @@ jobs:
           echo "::set-env name=PR_NUMBER_OPT::${PR_NUMBER_OPT}"
           # enable workflow command processing
           echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
-          
+
       - name: Set Branch Name
         if: github.event_name != 'pull_request'
         run: |
@@ -79,42 +79,60 @@ jobs:
           echo "::set-env name=BRANCH_NAME_OPT::${BRANCH_NAME_OPT}"
           # enable workflow command processing
           echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
-          
-  functional-test: 
+
+      - name: Build
+        run: ./gradlew clean build
+
+  functional-test:
     runs-on: ubuntu-latest
     needs: build
-    steps: 
+    steps:
+      - name: Set up Gradle
+        run: chmod +x gradlew
+
       - name: Functional Test
         run: ./gradlew functional-test
-      
-  mutation-test: 
+
+  mutation-test:
     runs-on: ubuntu-latest
     needs: build
-    steps: 
+    steps:
+      - name: Set up Gradle
+        run: chmod +x gradlew
+
       - name: Mutation Test
         run: ./gradlew pitest
-      
-  gatling-test: 
+
+  gatling-test:
     runs-on: ubuntu-latest
     needs: build
-    steps: 
+    steps:
+      - name: Set up Gradle
+        run: chmod +x gradlew
+
       - name: Gatling Test
         run: echo "./gradlew gatling-test"
-     
-  dependency-check: 
+
+  dependency-check:
     runs-on: ubuntu-latest
     needs: build
-    steps: 
+    steps:
+      - name: Set up Gradle
+        run: chmod +x gradlew
+
       - name: Dependency Check
         run: ./gradlew dependency-check
-      
-  sonarqube: 
+
+  sonarqube:
     runs-on: ubuntu-latest
-    needs: [functional-test, mutation-test, dependency-check, gatling-test]
-    steps: 
+    needs: [ functional-test, mutation-test, dependency-check, gatling-test ]
+    steps:
+      - name: Set up Gradle
+        run: chmod +x gradlew
+
       - name: Dependency Check
-        run: ./gradlew sonarqube  
-            
+        run: ./gradlew sonarqube
+
   notify-finish:
     runs-on: ubuntu-latest
     needs: sonarqube
