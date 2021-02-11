@@ -1,5 +1,5 @@
 plugins {
-    //id 'jacoco'
+    id 'io.firefly.java-conventions'
 }
 
 dependencies {

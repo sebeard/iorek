@@ -1,27 +1,5 @@
-pluginManagement {
-    repositories {
-        mavenLocal()
-        gradlePluginPortal()
-        mavenCentral()
-        jcenter()
-    }
-
-    plugins {
-        id 'com.avast.gradle.docker-compose' version "${dockerComposePluginVersion}"
-        id 'com.github.ben-manes.versions' version "${versionsPluginVersion}"
-        id 'com.github.hierynomus.license' version "${licensePluginVersion}"
-        id 'com.github.spotbugs' version "${spotbugsPluginVersion}"
-        id 'info.solidsoft.pitest' version "${pitestPluginVersion}"
-        id 'org.owasp.dependencycheck' version "${dependencyCheckPluginVersion}"
-        id 'org.sonarqube' version "${sonarqubePluginVersion}"
-        id 'io.spring.dependency-management' version "${springDependencyPluginVersion}"
-        id 'org.springframework.boot' version "${springBootPluginVersion}"
-        id 'org.springframework.boot.experimental.thin-launcher' version "${springBootThinLayoutPluginVersion}"
-        id 'com.github.johnrengelman.shadow' version "${shadowPluginVersion}"
-    }
-}
-
 rootProject.name = 'iorek'
+
 include(':iorek-hibp')
 include(':iorek-breach-function-aws')
 include(':iorek-external-services')

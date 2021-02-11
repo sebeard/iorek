@@ -10,8 +10,8 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2020-11-30T20:17:48+0000",
-    comments = "version: 1.4.1.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-6.7.1.jar, environment: Java 11.0.1 (Oracle Corporation)"
+    date = "2021-02-11T08:43:27+0000",
+    comments = "version: 1.4.2.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-6.8.2.jar, environment: Java 11.0.1 (Oracle Corporation)"
 )
 public class HIBPResponseMapperImpl implements HIBPResponseMapper {
 

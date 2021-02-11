@@ -1,0 +1,125 @@
+plugins {
+    id 'java-library'
+    id 'net.linguica.maven-settings' apply false
+    //id 'com.github.hierynomus.license'
+    id 'com.github.spotbugs'
+    id 'project-report'
+    id 'com.avast.gradle.docker-compose'
+    id 'maven-publish'
+    id 'nebula.dependency-recommender'
+    id 'io.firefly.jacoco-convention'
+    id 'info.solidsoft.pitest'
+}
+
+group 'io.firefly'
+version "${majorVersion}.${minorVersion}.${patchVersion}"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+//    mavenSettings {
+//        userSettingsFileName "${jenkinsSettingsFile}"
+//    }
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    //implementation group: 'org.slf4j', name: 'slf4j-api', version: "${slf4jVersion}"
+    //implementation group: 'org.slf4j', name: 'jul-to-slf4j', version: "${slf4jVersion}"
+
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: "${junitJupiterVersion}"
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: "${junitJupiterVersion}"
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${junitJupiterVersion}"
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: "${assertJVersion}"
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: "${mockitoVersion}"
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: "${mockitoVersion}"
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier = 'sources'
+}
+
+compileJava {
+    options.compilerArgs << "-Werror"
+    options.compilerArgs << "-Xlint:all"
+    options.compilerArgs << "-Xlint:-try"
+    options.compilerArgs << "-Xlint:-processing"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+spotbugsMain {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}
+
+spotbugsTest {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}
+
+pitest {
+    pitestVersion = project.properties["pitestVersion"]
+    threads = 4
+    outputFormats = ['XML', 'HTML']
+    timestampedReports = false
+    avoidCallsTo = ['org.slf4j']
+    failWhenNoMutations = false
+    timeoutConstInMillis = 15000 //  increase the default timeout to avoid mutation tests failing with TIMED_OUT
+}
+
+//    license {
+//        header rootProject.file('COPYRIGHT')
+//        strictCheck true
+//        skipExistingHeaders true
+//        excludes(['**/*.properties', '**/*.yml', '**/*.yaml', '**/*.json', '**/*.feature'])
+//        ext.year = Calendar.getInstance().get(Calendar.YEAR)
+//        mapping {
+//            java = 'SLASHSTAR_STYLE'
+//            xml = 'XML_STYLE'
+//        }
+//    }
+
+configurations.implementation.setCanBeResolved(true)
+configurations.testImplementation.setCanBeResolved(true)
+
+//publishing {
+//    publications {
+//        parent(MavenPublication) {
+//            nebulaDependencyManagement.fromConfigurations {
+//                project.allprojects.configurations.implementation
+//                project.allprojects.configurations.testImplementation
+//            }
+//
+//            artifactId = 'ffio-service-framework-bom'
+//            version "${majorVersion}.${minorVersion}.${patchVersion}"
+//
+//            // further customization of the POM is allowed if desired
+//            pom.withXml { asNode().appendNode('description', 'Service Framework Bill of Materials') }
+//        }
+//    }
+//    repositories {
+//        maven {
+//            name = 'releases'
+//            url CANDIDATES_REPO
+//        }
+//    }
+//}

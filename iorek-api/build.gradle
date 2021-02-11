@@ -1,5 +1,5 @@
 plugins {
-    id 'jacoco'
+    id 'io.firefly.java-conventions'
 }
 
 dependencies {
@@ -27,6 +27,7 @@ dependencies {
 
     testImplementation group: 'nl.jqno.equalsverifier', name: 'equalsverifier', version: "${equalsVerifierVersion}"
     testImplementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: "${jacksonVersion}"
+    testImplementation group: "org.apache.commons", name: "commons-lang3", version: "${commonsLang3Version}"
     testImplementation group: 'org.force66', name: 'BeanTester', version: "${beantesterVersion}"
     testImplementation group: 'org.skyscreamer', name: 'jsonassert', version: "${jsonAssertVersion}"
     testImplementation group: 'org.springframework', name: 'spring-test', version: "${springFrameworkVersion}"
