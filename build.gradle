@@ -1,0 +1,6 @@
+plugins {
+    id 'io.firefly.jacoco-aggregation'
+    id 'io.firefly.project-conventions'
+}
+
+evaluationDependsOnChildren()

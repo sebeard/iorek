@@ -1,0 +1,14 @@
+IoFireflyQualityConventionPlugin.java
+ IoFireflyQualityConventionPlugin
+IoFireflyJacocoAggregationPlugin.java
+ IoFireflyJacocoAggregationPlugin
+IoFireflyProjectConventionsPlugin.java
+ IoFireflyProjectConventionsPlugin
+IoFireflyJacocoConventionPlugin.java
+ IoFireflyJacocoConventionPlugin
+IoFireflyJavaConventionsPlugin.java
+ IoFireflyJavaConventionsPlugin
+IoFireflyDependencyCheckPlugin.java
+ IoFireflyDependencyCheckPlugin
+IoFireflyAwsLambdaConventionsPlugin.java
+ IoFireflyAwsLambdaConventionsPlugin

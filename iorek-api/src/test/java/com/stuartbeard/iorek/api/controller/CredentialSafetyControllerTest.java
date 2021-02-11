@@ -2,8 +2,10 @@ package com.stuartbeard.iorek.api.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.stuartbeard.iorek.api.Application;
-import com.stuartbeard.iorek.api.model.Message;
+import com.stuartbeard.iorek.api.config.ApplicationConfiguration;
+import com.stuartbeard.iorek.api.model.ErrorResponse;
 import com.stuartbeard.iorek.external.hibp.exception.PwnedPasswordsServiceException;
 import com.stuartbeard.iorek.service.PasswordCheckingService;
 import com.stuartbeard.iorek.service.model.CredentialSafety;
@@ -11,8 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -22,9 +25,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
-@SpringBootTest(classes = Application.class)
+@WebMvcTest
+@ContextConfiguration(classes = {Application.class, ApplicationConfiguration.class})
 class CredentialSafetyControllerTest {
 
     private static final String PASSWORD = "password";
@@ -37,6 +42,7 @@ class CredentialSafetyControllerTest {
 
     private static <T> String asJson(T object) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JodaModule());
         return mapper.writeValueAsString(object);
     }
 
@@ -64,6 +70,6 @@ class CredentialSafetyControllerTest {
 
         controller.perform(request)
             .andExpect(status().isGatewayTimeout())
-            .andExpect(content().json(asJson(new Message("Service Unavailable"))));
+            .andExpect(content().json(asJson(new ErrorResponse("Service Unavailable"))));
     }
 }

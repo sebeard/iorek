@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPathPattern": "/breachedaccount/toomanyrequests@email.com"
+    },
+    "response": {
+        "status": 429,
+        "headers": {
+            "Content-Type": "application/json",
+            "Retry-After": "1"
+        }
+    }
+}

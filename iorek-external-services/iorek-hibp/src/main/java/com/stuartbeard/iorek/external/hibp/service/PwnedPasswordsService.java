@@ -11,8 +11,11 @@ import java.util.List;
 public interface PwnedPasswordsService {
 
     @ErrorHandling(defaultException = PwnedPasswordsServiceException.class)
-    @Headers("User-Agent: Iorek")
+    @Headers({
+        "User-Agent: Iorek",
+        "Add-Padding: true"
+    })
     @RequestLine("GET /range/{sha1Prefix}")
-    List<String> getMatchingSuffixes(@Param("sha1Prefix") String sha1Prefix) throws PwnedPasswordsServiceException;
+    List<String> getMatchingSuffixes(@Param("sha1Prefix") String sha1Prefix);
 
 }

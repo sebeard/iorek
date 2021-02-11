@@ -13,9 +13,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import static feign.error.AnnotationErrorDecoder.builderFor;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PwnedPasswordsServiceTest {
@@ -29,7 +27,7 @@ class PwnedPasswordsServiceTest {
         "1F2B668E8AABEF1C59E9EC6F82E3F3CD786:1\r\n" +
         "2648FB0B2EDA4FDFF99BF51E912CD95C023:7059";
 
-    private MockWebServer pwnedPasswordsAPI = new MockWebServer();
+    private final MockWebServer pwnedPasswordsAPI = new MockWebServer();
 
     private PwnedPasswordsService pwnedPasswordsService;
 
@@ -46,11 +44,14 @@ class PwnedPasswordsServiceTest {
     }
 
     @Test
-    void shouldThrowPwnedPasswordExcpetionWhenServiceUnavailable() {
+    void shouldThrowPwnedPasswordExceptionWhenServiceUnavailable() {
         pwnedPasswordsAPI.enqueue(new MockResponse()
             .setResponseCode(503));
+        String sha1Prefix = hashPrefix();
 
-        assertThrows(PwnedPasswordsServiceException.class, () -> pwnedPasswordsService.getMatchingSuffixes(hashPrefix()));
+        assertThrows(PwnedPasswordsServiceException.class, () -> {
+            pwnedPasswordsService.getMatchingSuffixes(sha1Prefix);
+        });
     }
 
     @Test
@@ -62,8 +63,9 @@ class PwnedPasswordsServiceTest {
 
         List<String> matchingSuffixes = pwnedPasswordsService.getMatchingSuffixes(hashPrefix());
 
-        assertThat(matchingSuffixes, hasItem(expectedSuffix));
-        assertThat(matchingSuffixes, hasSize(5));
+        assertThat(matchingSuffixes)
+            .contains(expectedSuffix)
+            .hasSize(5);
     }
 
 

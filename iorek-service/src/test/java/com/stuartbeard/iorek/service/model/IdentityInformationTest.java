@@ -1,25 +1,25 @@
 package com.stuartbeard.iorek.service.model;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import org.force66.beantester.BeanTester;
 import org.junit.jupiter.api.Test;
-import org.meanbean.test.BeanTester;
-import org.meanbean.test.EqualsMethodTester;
-import org.meanbean.test.HashCodeMethodTester;
+
+import java.time.LocalDate;
 
 class IdentityInformationTest {
 
     @Test
     void shouldHaveValidGettersAndSetters() {
-        new BeanTester().testBean(IdentityInformation.class);
+        BeanTester beanTester = new BeanTester();
+        beanTester.addTestValues(LocalDate.class, new Object[]{LocalDate.parse("2020-12-03"), LocalDate.parse("2019-01-26")});
+        beanTester.testBean(IdentityInformation.class);
     }
 
     @Test
     void shouldHaveValidEqualsMethod() {
-        new EqualsMethodTester().testEqualsMethod(IdentityInformation.class);
-    }
-
-    @Test
-    void shouldHaveValidHashCodeMethod() {
-        new HashCodeMethodTester().testHashCodeMethod(IdentityInformation.class);
+        EqualsVerifier.simple()
+            .forClass(IdentityInformation.class)
+            .verify();
     }
 
 }

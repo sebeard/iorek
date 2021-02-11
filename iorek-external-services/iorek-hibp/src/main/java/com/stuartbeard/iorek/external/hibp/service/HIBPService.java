@@ -1,5 +1,7 @@
 package com.stuartbeard.iorek.external.hibp.service;
 
+import com.stuartbeard.iorek.external.hibp.exception.HIBPBadRequestException;
+import com.stuartbeard.iorek.external.hibp.exception.HIBPNotFoundException;
 import com.stuartbeard.iorek.external.hibp.exception.HIBPServiceException;
 import com.stuartbeard.iorek.external.hibp.exception.HIBPTooManyRequestsException;
 import com.stuartbeard.iorek.external.hibp.model.Breach;
@@ -16,20 +18,24 @@ public interface HIBPService {
 
     @ErrorHandling(
         codeSpecific = {
+            @ErrorCodes(codes = 400, generate = HIBPBadRequestException.class),
+            @ErrorCodes(codes = 404, generate = HIBPNotFoundException.class),
             @ErrorCodes(codes = 429, generate = HIBPTooManyRequestsException.class)
         },
         defaultException = HIBPServiceException.class)
     @Headers("User-Agent: Iorek")
     @RequestLine("GET /breachedaccount/{account}")
-    List<Breach> getBreaches(@Param("account") String email) throws HIBPServiceException, HIBPTooManyRequestsException;
+    List<Breach> getBreaches(@Param("account") String email);
 
     @ErrorHandling(
         codeSpecific = {
+            @ErrorCodes(codes = 400, generate = HIBPBadRequestException.class),
+            @ErrorCodes(codes = 404, generate = HIBPNotFoundException.class),
             @ErrorCodes(codes = 429, generate = HIBPTooManyRequestsException.class)
         },
         defaultException = HIBPServiceException.class)
     @Headers("User-Agent: Iorek")
     @RequestLine("GET /pasteaccount/{account}")
-    List<Paste> getPastes(@Param("account") String username) throws HIBPServiceException, HIBPTooManyRequestsException;
+    List<Paste> getPastes(@Param("account") String email);
 
 }

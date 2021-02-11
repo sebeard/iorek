@@ -1,0 +1,28 @@
+plugins {
+    id 'org.sonarqube'
+    id 'info.solidsoft.pitest'
+}
+
+/* Configure SonarQube Analysis */
+sonarqube {
+    properties {
+        property "sonar.projectKey", "service-framework"
+        property "sonar.projectName", "service-framework"
+        property "sonar.exclusions", "**/build/generated/**,"
+        property "sonar.coverage.exclusions", "**/src/test/**"
+        property "sonar.coverage.jacoco.xmlReportPaths", ["${project.buildDir}/reports/jacoco/codeCoverageReport/codeCoverageReport.xml"]
+        property "sonar.dependencyCheck.reportPath", "$project.buildDir/reports/dependency-check-report.xml"
+        property "sonar.dependencyCheck.htmlReportPath", "$project.buildDir/reports/dependency-check-report.html"
+        property "dc5.mutationAnalysis.pitest.sensor.reports.directory", "build/reports/pitest"
+    }
+}
+
+//pitest {
+//    pitestVersion = project.properties["pitestVersion"]
+//    threads = 4
+//    outputFormats = ['XML', 'HTML']
+//    timestampedReports = false
+//    avoidCallsTo = ['org.slf4j']
+//    failWhenNoMutations = false
+//    timeoutConstInMillis = 15000 //  increase the default timeout to avoid mutation tests failing with TIMED_OUT
+//}

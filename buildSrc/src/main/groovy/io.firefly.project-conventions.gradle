@@ -1,0 +1,12 @@
+plugins {
+    id 'java-library'
+    id 'io.firefly.java-conventions'
+    id 'io.firefly.quality-convention'
+    id 'io.firefly.dependency-check'
+    id 'maven-publish'
+}
+
+tasks.test.finalizedBy codeCoverageReport
+tasks["sonarqube"].mustRunAfter codeCoverageReport
+tasks["sonarqube"].dependsOn dependencyCheckAggregate
+//tasks["sonarqube"].dependsOn subprojects.tasks["pitest"]

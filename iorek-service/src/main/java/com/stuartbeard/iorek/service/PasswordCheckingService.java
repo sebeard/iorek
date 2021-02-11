@@ -2,21 +2,18 @@ package com.stuartbeard.iorek.service;
 
 import com.stuartbeard.iorek.service.config.CredentialSafetyConfig;
 import com.stuartbeard.iorek.service.model.CredentialSafety;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
 
 import javax.annotation.Nonnull;
 
-@Component
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class PasswordCheckingService {
 
-    private BreachService breachService;
-    private CredentialSafetyConfig credentialSafetyConfig;
+    private final CompromisedPasswordService compromisedPasswordService;
+    private final CredentialSafetyConfig credentialSafetyConfig;
 
     public CredentialSafety checkCredentialSafetyInfo(@Nonnull String password, boolean isSha1Hash) {
-        int appearancesInDataSet = breachService.getAppearanceCount(password, isSha1Hash);
+        int appearancesInDataSet = compromisedPasswordService.getAppearanceCount(password, isSha1Hash);
 
         return new CredentialSafety()
             .setSafe(appearancesInDataSet <= credentialSafetyConfig.getOk().getThreshold())

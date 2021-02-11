@@ -1,22 +1,20 @@
 package com.stuartbeard.iorek.external.hibp.exception;
 
+import feign.codec.RetryAfterException;
 import feign.error.FeignExceptionConstructor;
 import feign.error.ResponseBody;
 import feign.error.ResponseHeaders;
-import lombok.NoArgsConstructor;
 
+import java.util.Collection;
 import java.util.Map;
 
-@NoArgsConstructor
-public class HIBPTooManyRequestsException extends RuntimeException {
+public class HIBPTooManyRequestsException extends RetryAfterException {
 
     private static final long serialVersionUID = 1L;
 
-    private int retryAfter = 0;
-
     @FeignExceptionConstructor
-    public HIBPTooManyRequestsException(@ResponseHeaders Map<String, String> headers, @ResponseBody String body) {
-        super(body);
-        retryAfter = Integer.parseInt(headers.getOrDefault("Retry-After", "0"));
+    public HIBPTooManyRequestsException(@ResponseHeaders Map<String, Collection<String>> headers, @ResponseBody String errorMessage) {
+        super(429, headers, errorMessage);
     }
 }
+

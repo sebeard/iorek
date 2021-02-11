@@ -2,39 +2,32 @@ package com.stuartbeard.iorek.api.controller;
 
 import com.stuartbeard.iorek.service.PasswordCheckingService;
 import com.stuartbeard.iorek.service.model.CredentialSafety;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import static com.stuartbeard.iorek.api.descriptions.APIDescriptions.*;
+import static com.stuartbeard.iorek.api.descriptions.APIDescriptions.CREDENTIAL_SAFETY_NAME;
 
 @RestController
 @RequestMapping("credential-safety")
-@Api(value = "Credential Safety Endpoint",
-    produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
-    description = GET_CREDENTIAL_SAFETY_DESC,
+@Api(value = CREDENTIAL_SAFETY_NAME,
+    produces = MediaType.APPLICATION_JSON_VALUE,
     tags = {"credentials"}
 )
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-public class CredentialSafetyController {
+public class CredentialSafetyController implements CredentialSafetyContract {
 
-    private PasswordCheckingService passwordCheckingService;
+    private final PasswordCheckingService passwordCheckingService;
 
-    @GetMapping(value = "/{credential}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = GET_CREDENTIAL_SAFETY_DESC, response = CredentialSafety.class)
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = API_200_MESSAGE, response = CredentialSafety.class),
-        @ApiResponse(code = 429, message = API_429_MESSAGE, response = String.class, responseHeaders =
-        @ResponseHeader(name = HttpHeaders.RETRY_AFTER)),
-        @ApiResponse(code = 500, message = API_500_MESSAGE, response = String.class),
-        @ApiResponse(code = 503, message = API_503_MESSAGE, response = String.class, responseHeaders =
-        @ResponseHeader(name = HttpHeaders.RETRY_AFTER)),
-        @ApiResponse(code = 504, message = API_504_MESSAGE, response = String.class, responseHeaders =
-        @ResponseHeader(name = HttpHeaders.RETRY_AFTER))
-    })
+    @Override
+    @GetMapping(value = "/{credential}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public CredentialSafety getCredentialSafety(@PathVariable("credential") String credential,
                                                 @RequestParam(value = "sha1Hash", defaultValue = "true") boolean isSha1Hash) {
