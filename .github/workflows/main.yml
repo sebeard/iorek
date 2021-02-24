@@ -93,6 +93,21 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 50
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/dependency-check-data
+          key: ${{ runner.os }}-gradle-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+    
       - name: Set up Gradle
         run: chmod +x gradlew
 
@@ -103,6 +118,22 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 50
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/dependency-check-data
+          key: ${{ runner.os }}-gradle-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+    
       - name: Set up Gradle
         run: chmod +x gradlew
 
@@ -113,6 +144,22 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 50
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/dependency-check-data
+          key: ${{ runner.os }}-gradle-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+    
       - name: Set up Gradle
         run: chmod +x gradlew
 
@@ -123,6 +170,22 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 50
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/dependency-check-data
+          key: ${{ runner.os }}-gradle-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+    
       - name: Set up Gradle
         run: chmod +x gradlew
 
@@ -133,6 +196,22 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ functional-test, mutation-test, dependency-check, gatling-test ]
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 50
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/dependency-check-data
+          key: ${{ runner.os }}-gradle-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+    
       - name: Set up Gradle
         run: chmod +x gradlew
 
