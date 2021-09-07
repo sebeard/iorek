@@ -34,15 +34,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
 @CucumberContextConfiguration
-@ActiveProfiles(FUNCTIONAL)
+//@ActiveProfiles(FUNCTIONAL)
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     classes = SampleApplication.class
 )
-@ContextConfiguration(classes = {
-    ActionConfiguration.class,
-    JacksonAutoConfiguration.class,
-})
+@ContextConfiguration(classes = {JacksonAutoConfiguration.class})
 public class FunctionalDefinition {
 
     @Autowired

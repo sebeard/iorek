@@ -23,7 +23,6 @@
  */
 package com.stuartbeard.iorek.test.steps;
 
-import com.stuartbeard.iorek.test.actions.AccountActions;
 import com.stuartbeard.iorek.test.context.FunctionalTestContextKey;
 import com.stuartbeard.iorek.test.context.ScenarioContext;
 import io.cucumber.java.en.Given;
@@ -39,7 +38,7 @@ import static org.assertj.core.api.Assertions.fail;
 public class AccountSteps {
 
     private final ScenarioContext scenarioContext;
-    private final AccountActions accountActions;
+    //private final AccountActions accountActions;
 
     @Given("^I do not have an existing account$")
     public void noAccount() {
