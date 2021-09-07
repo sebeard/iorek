@@ -1,0 +1,19 @@
+plugins {
+    id 'io.firefly.library-convention'
+}
+
+dependencies {
+    api project(':iorek-external-services:iorek-pwned-passwords')
+    api project(':iorek-service')
+
+    implementation group: 'org.springframework', name: 'spring-beans', version: "${springFrameworkVersion}"
+    implementation group: 'org.springframework', name: 'spring-context', version: "${springFrameworkVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot', version: "${springBootVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: "${springBootVersion}"
+
+    implementation group: 'javax.validation', name: 'validation-api', version: "${javaxValidationVersion}"
+    implementation group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: "${hibernatePersistenceApiVersion}"
+
+    testImplementation group: 'org.glassfish', name: 'javax.el', version: "${javaxElVersion}"
+    testImplementation group: 'org.hibernate', name: 'hibernate-validator', version: "${hibernateValidatorVersion}"
+}

@@ -1,6 +1,47 @@
 plugins {
-    id 'io.firefly.jacoco-aggregation'
-    id 'io.firefly.project-conventions'
+    id 'io.firefly.project-convention'
 }
 
 evaluationDependsOnChildren()
+
+allprojects {
+
+    configurations {
+        commonPlatform
+        compileOnly.extendsFrom(commonPlatform)
+        annotationProcessor.extendsFrom(commonPlatform)
+        implementation.extendsFrom(commonPlatform)
+        api.extendsFrom(commonPlatform)
+        testCompileOnly.extendsFrom(commonPlatform)
+        testAnnotationProcessor.extendsFrom(commonPlatform)
+        testRuntimeOnly.extendsFrom(commonPlatform)
+        testImplementation.extendsFrom(commonPlatform)
+        testFixturesCompileOnly.extendsFrom(commonPlatform)
+        testFixturesAnnotationProcessor.extendsFrom(commonPlatform)
+        testFixturesImplementation.extendsFrom(commonPlatform)
+    }
+
+    dependencies {
+        commonPlatform enforcedPlatform("io.firefly:firefly-bom:${fireflyServiceFrameworkVersion}")
+
+        implementation group: 'org.slf4j', name: 'slf4j-api'
+        implementation group: 'org.slf4j', name: 'jul-to-slf4j'
+
+        compileOnly group: 'org.projectlombok', name: 'lombok'
+        annotationProcessor group: 'org.projectlombok', name: 'lombok'
+        testCompileOnly group: 'org.projectlombok', name: 'lombok'
+        testAnnotationProcessor group: 'org.projectlombok', name: 'lombok'
+
+        compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations'
+        testCompileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations'
+
+        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api'
+        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params'
+        testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine'
+        testImplementation group: 'nl.jqno.equalsverifier', name: 'equalsverifier'
+        testImplementation group: 'org.assertj', name: 'assertj-core'
+        testImplementation group: 'org.force66', name: 'BeanTester'
+        testImplementation group: 'org.mockito', name: 'mockito-core'
+        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter'
+    }
+}

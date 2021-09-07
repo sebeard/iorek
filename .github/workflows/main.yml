@@ -1,42 +1,51 @@
-name: Develop Branch Build Pipeline
+name: Build Pipeline
 
 on:
   # Nightly Run
   schedule:
     - cron: '0 1 * * *'
-  # Merge to develop
+  # Push to main branch
   push:
-    branches: ['develop']
-  # Manual Retrigger
+    branches:
+      - 'main'
+  # Any pull request
+  pull_request:
+    branches:
+      - '*'
+      - '*/*'
+  # Manual Trigger
   workflow_dispatch:
 
 env:
-  slack-status-channel: iorek-alerts
+  SLACK_STATUS_CHANNEL: iorek-alerts
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  GITHUB_PACKAGES_USER: ${{ secrets.PACKAGES_USER }}
+  GITHUB_PACKAGES_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
 
 jobs:
-  # Checkout, Setup and Notify
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Notify Slack Start
         uses: act10ns/slack@v1.2.2
+        if: always()
         with:
           status: starting
-          channel: ${{ env.slack-status-channel }}
-        if: always()
+          channel: ${{ env.SLACK_STATUS_CHANNEL }}
 
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
-          persist-credentials: false
+          token: ${{ env.GITHUB_PACKAGES_TOKEN }}
           fetch-depth: 50
 
-      - uses: actions/cache@v2
+      - name: Fetch Tags
+        run: |
+          git fetch --tags --prune
+
+      - name: Cache/Restore Gradle Data
+        uses: actions/cache@v2
         with:
           path: |
             ~/.gradle/caches
@@ -59,7 +68,7 @@ jobs:
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
 
-      - name: Set up Gradle
+      - name: Make Gradle Wrapper Executable
         run: chmod +x gradlew
 
       - name: Set PR Number
@@ -86,68 +95,38 @@ jobs:
           # enable workflow command processing
           echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
 
-      - name: Build
+      - name: Run Clean Build
         run: ./gradlew clean build
 
-  functional-test:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Set up Gradle
-        run: chmod +x gradlew
+      - name: Run OWASP Dependency Check
+        run: ./gradlew dependencyCheckAggregate
 
-      - name: Functional Test
-        run: ./gradlew functional-test
-
-  mutation-test:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Set up Gradle
-        run: chmod +x gradlew
-
-      - name: Mutation Test
+      - name: Run Mutation Test
         run: ./gradlew pitest
 
-  gatling-test:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Set up Gradle
-        run: chmod +x gradlew
+#      - name: Perform Sonarqube Checks
+#        run: ./gradlew sonarqube
 
-      - name: Gatling Test
-        run: echo "./gradlew gatling-test"
+      - name: Upload Reports
+        uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: reports
+          path: build/reports
 
-  dependency-check:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Set up Gradle
-        run: chmod +x gradlew
+      - name: Perform a Semantic Version Release
+        if: github.ref == 'refs/heads/main'
+        run: ./gradlew printVersion releaseVersion --no-commit
 
-      - name: Dependency Check
-        run: ./gradlew dependency-check
+      - name: Push Version Tag to Origin
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git push --follow-tags
 
-  sonarqube:
-    runs-on: ubuntu-latest
-    needs: [ functional-test, mutation-test, dependency-check, gatling-test ]
-    steps:
-      - name: Set up Gradle
-        run: chmod +x gradlew
-
-      - name: Dependency Check
-        run: ./gradlew sonarqube
-
-  notify-finish:
-    runs-on: ubuntu-latest
-    needs: sonarqube
-    if: always()
-    steps:
       - name: Notify Slack Finish
+        if: always()
         uses: act10ns/slack@v1
         with:
           status: ${{ job.status }}
           steps: ${{ toJson(steps) }}
-          channel: ${{ env.slack-status-channel }}
-        if: always()
+          channel: ${{ env.SLACK_STATUS_CHANNEL }}

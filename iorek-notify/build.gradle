@@ -1,0 +1,18 @@
+plugins {
+    id 'io.firefly.library-convention'
+}
+
+dependencies {
+    api project(':iorek-external-services:iorek-pwned-passwords')
+    api project(':iorek-service')
+
+    implementation group: 'org.springframework', name: 'spring-beans', version: "${springFrameworkVersion}"
+    implementation group: 'org.springframework', name: 'spring-context', version: "${springFrameworkVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot', version: "${springBootVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: "${springBootVersion}"
+
+    implementation group: 'org.springframework.security', name: 'spring-security-config', version: "${springSecurityVersion}"
+    implementation group: 'org.springframework.security', name: 'spring-security-core', version: "${springSecurityVersion}"
+    implementation group: 'org.springframework.security', name: 'spring-security-web', version: "${springSecurityVersion}"
+
+}

@@ -1,25 +1,28 @@
+pluginManagement {
+    repositories {
+        mavenLocal()
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/sebeard/*")
+            credentials {
+                username = System.getenv("GITHUB_PACKAGES_USER")
+                password = System.getenv("GITHUB_PACKAGES_TOKEN")
+            }
+        }
+        gradlePluginPortal()
+        mavenCentral()
+    }
+
+    plugins {
+        id 'io.firefly.project-convention' version "${fireflyConventionsVersion}"
+        id 'io.firefly.library-convention' version "${fireflyConventionsVersion}"
+    }
+}
+
 rootProject.name = 'iorek'
 
-include(':iorek-hibp')
-include(':iorek-breach-function-aws')
-include(':iorek-external-services')
-include(':iorek-packaging')
-include(':iorek-breach-function-core')
-include(':iorek-cloud-function')
-include(':iorek-test')
-include(':iorek-password-check-function-aws')
-include(':iorek-api')
-include(':iorek-docker')
-include(':iorek-breach-function')
-include(':iorek-service')
-include(':iorek-password-check-function-core')
-include(':iorek-password-check-function')
-project(":iorek-hibp").projectDir = file('iorek-external-services/iorek-hibp')
-project(":iorek-breach-function-aws").projectDir = file('iorek-packaging/iorek-cloud-function/iorek-breach-function/iorek-breach-function-aws')
-project(":iorek-breach-function-core").projectDir = file('iorek-packaging/iorek-cloud-function/iorek-breach-function/iorek-breach-function-core')
-project(":iorek-cloud-function").projectDir = file('iorek-packaging/iorek-cloud-function')
-project(":iorek-password-check-function-aws").projectDir = file('iorek-packaging/iorek-cloud-function/iorek-password-check-function/iorek-password-check-function-aws')
-project(":iorek-docker").projectDir = file('iorek-packaging/iorek-api-docker')
-project(":iorek-breach-function").projectDir = file('iorek-packaging/iorek-cloud-function/iorek-breach-function')
-project(":iorek-password-check-function-core").projectDir = file('iorek-packaging/iorek-cloud-function/iorek-password-check-function/iorek-password-check-function-core')
-project(":iorek-password-check-function").projectDir = file('iorek-packaging/iorek-cloud-function/iorek-password-check-function')
+include ':iorek-external-services:iorek-pwned-passwords'
+include ':iorek-service'
+include ':iorek-constraints'
+include ':iorek-notify'
+include ':iorek-sample'
