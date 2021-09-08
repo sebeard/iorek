@@ -70,40 +70,24 @@ class PasswordCheckingServiceTest {
     @ParameterizedTest
     @MethodSource("inputs")
     void shouldReturnUnsafeAndButAllowedCredentialSafetyWhenFoundInDataSetWithinWarningThreshold(String input, boolean sha1Hash) {
-        when(compromisedPasswordService.getAppearanceCount(input, sha1Hash)).thenReturn(2);
+        when(compromisedPasswordService.getAppearanceCount(input, sha1Hash)).thenReturn(1);
 
         PasswordCheckResult passwordCheckResult = passwordCheckingService.checkPasswordForKnownCompromise("test", input, sha1Hash);
 
         verify(compromisedPasswordService).getAppearanceCount(input, sha1Hash);
-        assertThat(passwordCheckResult.getCompromisedCount()).isEqualTo(2);
+        assertThat(passwordCheckResult.getCompromisedCount()).isEqualTo(1);
         assertThat(passwordCheckResult.getRiskLevel()).isEqualTo(PasswordRiskLevel.COMPROMISED);
     }
 
     @ParameterizedTest
     @MethodSource("inputs")
     void shouldReturnUnsafeAndNotAllowedCredentialSafetyWhenFoundInDataSet(String input, boolean sha1Hash) {
-        when(compromisedPasswordService.getAppearanceCount(input, sha1Hash)).thenReturn(3);
+        when(compromisedPasswordService.getAppearanceCount(input, sha1Hash)).thenReturn(2);
 
         PasswordCheckResult passwordCheckResult = passwordCheckingService.checkPasswordForKnownCompromise("test", input, sha1Hash);
 
         verify(compromisedPasswordService).getAppearanceCount(input, sha1Hash);
-        assertThat(passwordCheckResult.getCompromisedCount()).isEqualTo(3);
-        assertThat(passwordCheckResult.getRiskLevel()).isEqualTo(PasswordRiskLevel.SEVERELY_COMPROMISED);
-    }
-
-    @ParameterizedTest
-    @MethodSource("inputs")
-    void shouldReturnUnsafeButAllowedCredentialSafetyWhenFoundInDataSetButPreventSevereIsOff(String input, boolean sha1Hash) {
-        CompromisedPasswordThresholdConfigurationProperties safetyConfig = new CompromisedPasswordThresholdConfigurationProperties();
-        safetyConfig.setWarning(1);
-        safetyConfig.setSevere(2);
-        passwordCheckingService = new PasswordCheckingService(compromisedPasswordService, safetyConfig);
-        when(compromisedPasswordService.getAppearanceCount(input, sha1Hash)).thenReturn(3);
-
-        PasswordCheckResult passwordCheckResult = passwordCheckingService.checkPasswordForKnownCompromise("test", input, sha1Hash);
-
-        verify(compromisedPasswordService).getAppearanceCount(input, sha1Hash);
-        assertThat(passwordCheckResult.getCompromisedCount()).isEqualTo(3);
+        assertThat(passwordCheckResult.getCompromisedCount()).isEqualTo(2);
         assertThat(passwordCheckResult.getRiskLevel()).isEqualTo(PasswordRiskLevel.SEVERELY_COMPROMISED);
     }
 }
