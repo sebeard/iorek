@@ -53,8 +53,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic();
 
-        http.csrf().disable()
-            .authorizeRequests()
+        http.authorizeRequests()
             .antMatchers("/sample/in-band").permitAll()
             .anyRequest().fullyAuthenticated()
             .and()
