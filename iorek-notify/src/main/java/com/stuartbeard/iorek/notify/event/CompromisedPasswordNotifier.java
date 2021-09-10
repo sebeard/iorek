@@ -29,7 +29,7 @@ import org.springframework.security.core.CredentialsContainer;
 @RequiredArgsConstructor
 public final class CompromisedPasswordNotifier {
 
-    private static final String REQUEST_FLOW = "login";
+    private static final String REQUEST_FLOW = "authentication";
 
     private final PasswordCheckingService passwordCheckingService;
     private final CompromisedPasswordNotificationService notificationService;
@@ -57,8 +57,7 @@ public final class CompromisedPasswordNotifier {
         Authentication auth = event.getAuthentication();
         try {
             if (auth instanceof UsernamePasswordAuthenticationToken && auth.getCredentials() != null) {
-                String clearTextPass = (String) auth.getCredentials();
-                PasswordCheckResult passwordCheckResult = passwordCheckingService.checkPasswordForKnownCompromise(REQUEST_FLOW, clearTextPass, false);
+                PasswordCheckResult passwordCheckResult = passwordCheckingService.checkPasswordForKnownCompromise(REQUEST_FLOW, (String) auth.getCredentials(), false);
                 ((UsernamePasswordAuthenticationToken) auth).eraseCredentials();
 
                 if (monitoringOnly) {

@@ -14,6 +14,7 @@ import com.stuartbeard.iorek.service.recorder.PasswordCheckRecorder;
 import com.stuartbeard.iorek.pwned.passwords.config.PwnedPasswordsConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -46,7 +47,7 @@ public class CompromisedPasswordNotificationConfiguration {
     @Bean
     public CompromisedPasswordNotifier compromisedPasswordNotifier(PasswordCheckingService passwordCheckingService,
                                                                    CompromisedPasswordNotificationService notificationService,
-                                                                   @Value("${pwned.monitoring:true}") boolean monitoringMode) {
+                                                                   @Value("${compromised.password.monitoring.only:true}") boolean monitoringMode) {
         return new CompromisedPasswordNotifier(passwordCheckingService, notificationService, monitoringMode);
     }
 
@@ -84,8 +85,7 @@ public class CompromisedPasswordNotificationConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public CompromisedPasswordNotificationService compromisedPasswordNotificationService() {
-        return new CompromisedPasswordNotificationService() {
-        };
+        return new CompromisedPasswordNotificationService() {};
     }
 
     /**
@@ -98,5 +98,12 @@ public class CompromisedPasswordNotificationConfiguration {
     @ConditionalOnMissingBean
     public PasswordCheckRecorder passwordCheckRecorder() {
         return new PasswordCheckRecorder() {};
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConfigurationProperties("compromised.password.thresholds")
+    public CompromisedPasswordThresholdConfigurationProperties credentialSafetyConfig() {
+        return new CompromisedPasswordThresholdConfigurationProperties();
     }
 }

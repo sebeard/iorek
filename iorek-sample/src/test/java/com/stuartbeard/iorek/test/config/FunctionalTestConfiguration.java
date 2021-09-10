@@ -23,33 +23,32 @@
  */
 package com.stuartbeard.iorek.test.config;
 
-import io.cucumber.java.After;
-import io.cucumber.spring.CucumberContextConfiguration;
-import com.stuartbeard.iorek.sample.SampleApplication;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.stuartbeard.iorek.test.actions.SampleActions;
+import com.stuartbeard.iorek.test.actions.SampleApiActions;
 import com.stuartbeard.iorek.test.context.ScenarioContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
-@CucumberContextConfiguration
-@ActiveProfiles("functional")
-@SpringBootTest(
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    classes = SampleApplication.class
-)
-@ContextConfiguration(classes = {
-    FunctionalTestConfiguration.class,
-    JacksonAutoConfiguration.class
-})
-public class FunctionalDefinition {
+@Configuration
+public class FunctionalTestConfiguration {
 
-    @Autowired
-    private ScenarioContext scenarioContext;
+    @Bean
+    public ScenarioContext scenarioContext() {
+        return new ScenarioContext();
+    }
 
-    @After
-    public void tearDown() {
-        scenarioContext.clear();
+    @Bean
+    public SampleActions sampleActions(SampleApiActions sampleApiActions, ScenarioContext scenarioContext) {
+        return new SampleActions(sampleApiActions, scenarioContext);
+    }
+
+    @Bean
+    public SampleApiActions sampleApiActions(TestRestTemplate testRestTemplate) {
+        return new SampleApiActions(testRestTemplate);
     }
 }

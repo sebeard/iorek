@@ -6,13 +6,15 @@ dependencies {
     api project(':iorek-external-services:iorek-pwned-passwords')
     api project(':iorek-service')
 
-    implementation group: 'org.springframework', name: 'spring-beans', version: "${springFrameworkVersion}"
-    implementation group: 'org.springframework', name: 'spring-context', version: "${springFrameworkVersion}"
-    implementation group: 'org.springframework.boot', name: 'spring-boot', version: "${springBootVersion}"
+    implementation group: 'org.springframework', name: 'spring-beans'
+    implementation group: 'org.springframework', name: 'spring-context'
+    implementation group: 'org.springframework.boot', name: 'spring-boot'
     implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: "${springBootVersion}"
 
-    implementation group: 'org.springframework.security', name: 'spring-security-config', version: "${springSecurityVersion}"
-    implementation group: 'org.springframework.security', name: 'spring-security-core', version: "${springSecurityVersion}"
-    implementation group: 'org.springframework.security', name: 'spring-security-web', version: "${springSecurityVersion}"
+    implementation group: 'org.springframework.security', name: 'spring-security-config'
+    implementation group: 'org.springframework.security', name: 'spring-security-core'
+    implementation group: 'org.springframework.security', name: 'spring-security-web'
 
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 }

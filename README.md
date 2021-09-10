@@ -182,14 +182,27 @@ compromised.password.thresholds.severe=1
 compromised.password.monitoring.only=true
 ```
 
-## Etymology
+## Sample Module
 
-This project is named after Iorek Byrnison, the armoured bear from Philip Pullman's His Dark Materials Trilogy. Iorek
-Byrnison is an armoured bear and companion of Lyra's. Armoured bears, also known as panserbjørn in Norwegian, are a race
-of polar bear-like creatures with human level intelligence and opposable thumbs; they have no dæmons and consider their
-armour, which is made of meteoric iron, to be their soul.
+The sample module acts as a very rudimentary test and sample bed for both libraries. It is designed to show a registration flow,
+a login flow, password management flows and a change email flow and how the different libraries can be applied. It is
+designed to **solely** show the annotations in action, the notification library in action, and the simple configuration.
+It is in no way intended to implement a complete account or user security and management facility.
+
+Since the sample is also tested against PwnedPasswords at a functional test level it also helps ensure that the
+implementation of the libraries is correct according to the PwnedPasswords integration.
+
+**DISCLAIMER** The sample is by no means complete, and by no means does it show a complete working model. Nor should it
+be used in a live production environment.
+
+## Etymology
 
 Iorek (this project) is inspired by the groundbreaking work produced by Troy Hunt that formed Have I Been Pwned (HIBP),
 and subsequently PwnedPasswords. This project started shortly after Troy announced _Project Svalbard_ aimed at
 maintaining HIBP going forward. While many things have changed since that announcement, including PwnedPasswords
 going Open Source and being fed by the FBI, this project retains the original name, Iorek.
+
+This project is named after Iorek Byrnison, the armoured bear from Philip Pullman's His Dark Materials Trilogy. Iorek
+Byrnison is an armoured bear and companion of Lyra's. Armoured bears, also known as panserbjørn in Norwegian, are a race
+of polar bear-like creatures with human level intelligence and opposable thumbs; they have no dæmons and consider their
+armour, which is made of meteoric iron, to be their soul.

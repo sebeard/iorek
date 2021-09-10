@@ -21,29 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.stuartbeard.iorek.sample.service;
+package com.stuartbeard.iorek.sample;
 
-import com.stuartbeard.iorek.sample.persistence.model.SampleUser;
-import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
-import org.springframework.security.crypto.keygen.StringKeyGenerator;
-import org.springframework.stereotype.Service;
+import com.stuartbeard.iorek.notify.service.CompromisedPasswordNotificationService;
+import com.stuartbeard.iorek.service.model.PasswordCheckResult;
+import lombok.Getter;
+import org.springframework.security.core.userdetails.User;
 
-import java.util.Base64;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
-@Service
-public class PasswordResetService {
+@Getter
+public class SimpleCompromisedPasswordNotificationService implements CompromisedPasswordNotificationService {
 
-    private static final StringKeyGenerator TOKEN_GENERATOR = new Base64StringKeyGenerator(Base64.getUrlEncoder().withoutPadding(), 48);
-    private final Map<String, String> passwordResetTokenUserNameMap = new ConcurrentHashMap<>();
+    private final Map<Object, PasswordCheckResult> passwordCheckResultByPrincipal = new HashMap<>();
 
-    public void createPasswordResetTokenForUser(String username) {
-        passwordResetTokenUserNameMap.putIfAbsent(TOKEN_GENERATOR.generateKey(), username);
-    }
-
-    public Optional<String> getUsernameByPasswordResetToken(final String token) {
-        return Optional.ofNullable(passwordResetTokenUserNameMap.get(token));
+    @Override
+    public void sendNotification(Object principal, PasswordCheckResult passwordCheckResult) {
+        User user = (User) principal;
+        passwordCheckResultByPrincipal.put(user.getUsername(), passwordCheckResult);
     }
 }

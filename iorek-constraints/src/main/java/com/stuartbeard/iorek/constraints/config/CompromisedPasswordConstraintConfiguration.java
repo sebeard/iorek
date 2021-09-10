@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2019-2021 Stuart Beard
  */
-package com.stuartbeard.iorek.config;
+package com.stuartbeard.iorek.constraints.config;
 
 import com.stuartbeard.iorek.service.PasswordCheckingService;
 import com.stuartbeard.iorek.service.config.CompromisedPasswordThresholdConfigurationProperties;
@@ -13,6 +13,7 @@ import com.stuartbeard.iorek.constraints.validation.CompromisedPasswordConstrain
 import com.stuartbeard.iorek.pwned.passwords.config.PwnedPasswordsConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -82,5 +83,13 @@ public class CompromisedPasswordConstraintConfiguration {
     @ConditionalOnMissingBean
     public PasswordCheckRecorder passwordCheckRecorder() {
         return new PasswordCheckRecorder() {};
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConfigurationProperties("compromised.password.thresholds")
+    public CompromisedPasswordThresholdConfigurationProperties credentialSafetyConfig() {
+        return new CompromisedPasswordThresholdConfigurationProperties();
     }
 }

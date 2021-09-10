@@ -23,6 +23,7 @@
  */
 package com.stuartbeard.iorek.sample.api.exception;
 
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -42,24 +43,14 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
-    public List<ValidationErrorResponse> handleException(MethodArgumentNotValidException ex) {
+    public String handleException(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
         return bindingResult
             .getAllErrors()
             .stream()
-            .map(br -> {
-                ValidationErrorResponse validationErrorResponse = new ValidationErrorResponse();
-                validationErrorResponse.setMessage(br.getDefaultMessage());
-
-                if (br instanceof FieldError) {
-                    FieldError fieldError = (FieldError) br;
-                    validationErrorResponse.setField(fieldError.getField());
-                    return validationErrorResponse;
-                }
-
-                return validationErrorResponse;
-            })
-            .collect(Collectors.toList());
+            .map(DefaultMessageSourceResolvable::getDefaultMessage)
+            .findFirst()
+            .orElse("Something Went Wrong");
     }
 
 

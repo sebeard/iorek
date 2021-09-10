@@ -21,13 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.stuartbeard.iorek.sample.api.exception;
+package com.stuartbeard.iorek.sample;
 
-import lombok.Data;
+import com.stuartbeard.iorek.service.model.PasswordCheckResult;
+import com.stuartbeard.iorek.service.recorder.PasswordCheckRecorder;
+import lombok.Getter;
 
-@Data
-public class ValidationErrorResponse {
+import java.util.HashMap;
+import java.util.Map;
 
-    private String field;
-    private String message;
+@Getter
+public class SimplePasswordCheckRecorder implements PasswordCheckRecorder {
+
+    private final Map<String, PasswordCheckResult> latestPasswordCheckResultByRequestFlow = new HashMap<>();
+
+    @Override
+    public void recordPasswordCheck(String requestFlow, PasswordCheckResult passwordCheckResult) {
+        latestPasswordCheckResultByRequestFlow.put(requestFlow, passwordCheckResult);
+    }
+
+    public void clearResults() {
+        latestPasswordCheckResultByRequestFlow.clear();
+    }
 }

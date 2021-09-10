@@ -41,7 +41,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
         auth.inMemoryAuthentication()
             .withUser("user1").password(passwordEncoder().encode("password")).roles("USER")
             .and()
-            .withUser("user2").password(passwordEncoder().encode("oreoCooki3")).roles("USER")
+            .withUser("user2").password(passwordEncoder().encode("oreoCookie1")).roles("USER")
             .and()
             .withUser("user3").password(passwordEncoder().encode("thisIsAnAwesomelySecurePasswordThatHasNotBeenCompromisedKnowinglyYet")).roles("USER")
             .and().passwordEncoder(passwordEncoder())
@@ -55,9 +55,10 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 
         http.csrf().disable()
             .authorizeRequests()
-            .antMatchers("/account", "/account/password/reset").permitAll()
-            .antMatchers("/").permitAll()
-            .anyRequest().fullyAuthenticated();
+            .antMatchers("/sample/in-band").permitAll()
+            .anyRequest().fullyAuthenticated()
+            .and()
+            .httpBasic();
     }
 
     @Bean

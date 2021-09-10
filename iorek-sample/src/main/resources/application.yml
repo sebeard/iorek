@@ -1,4 +1,5 @@
 spring.main.allow-bean-definition-overriding: true
-logging.level.org.springframework: DEBUG
 
-compromised.password.thresholds.severe: 1000
+compromised.password:
+  thresholds.severe: 1000
+  monitoring.only: false

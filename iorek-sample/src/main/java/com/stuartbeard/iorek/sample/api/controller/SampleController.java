@@ -21,22 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.stuartbeard.iorek.sample.api.model;
+package com.stuartbeard.iorek.sample.api.controller;
 
-import com.stuartbeard.iorek.constraints.NotKnowinglyCompromised;
-import lombok.Data;
+import com.stuartbeard.iorek.sample.api.model.SampleRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.Valid;
 
-@Data
-public class ChangePasswordRequest {
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("sample")
+public class SampleController {
 
-    @NotBlank
-    private String oldPassword;
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("in-band")
+    public String inBandSample(@Valid @RequestBody SampleRequest sampleRequest) {
+        return "In Band Request Processed Successfully";
+    }
 
-    @Size(min = 8)
-    @NotBlank
-    @NotKnowinglyCompromised(requestFlow = "change-password")
-    private String newPassword;
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("out-of-band")
+    public String outOfBandSample() {
+        return "Out of Band Request Processed Successfully";
+    }
 }

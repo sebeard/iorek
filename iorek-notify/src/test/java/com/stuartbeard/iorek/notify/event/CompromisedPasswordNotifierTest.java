@@ -43,7 +43,7 @@ import static org.mockito.Mockito.when;
 @MockitoSettings
 class CompromisedPasswordNotifierTest {
 
-    private static final String REQUEST_FLOW = "login";
+    private static final String REQUEST_FLOW = "authentication";
     private static final String CREDENTIAL = "credential";
     private static final String PRINCIPAL = "principal";
 
