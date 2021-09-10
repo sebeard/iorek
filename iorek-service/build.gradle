@@ -5,6 +5,11 @@ plugins {
 dependencies {
     compileOnly group: 'net.jcip', name: 'jcip-annotations', version: "${jcipAnnotationsVersion}"
 
+    implementation group: 'org.springframework', name: 'spring-beans'
+    implementation group: 'org.springframework', name: 'spring-context'
+    implementation group: 'org.springframework.boot', name: 'spring-boot'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: "${springBootVersion}"
+
     testImplementation group: 'commons-codec', name: 'commons-codec', version: "${commonsCodecVersion}"
     testImplementation group: "org.apache.commons", name: "commons-lang3", version: "${commonsLang3Version}"
 }

@@ -6,6 +6,7 @@
 package com.stuartbeard.iorek.constraints.config;
 
 import com.stuartbeard.iorek.service.PasswordCheckingService;
+import com.stuartbeard.iorek.service.config.CommonCompromisedPasswordConfiguration;
 import com.stuartbeard.iorek.service.config.CompromisedPasswordThresholdConfigurationProperties;
 import com.stuartbeard.iorek.service.external.CompromisedPasswordService;
 import com.stuartbeard.iorek.service.recorder.PasswordCheckRecorder;
@@ -29,7 +30,10 @@ import org.springframework.context.annotation.Import;
  * @see PwnedPasswordsConfiguration
  */
 @Configuration
-@Import(PwnedPasswordsConfiguration.class)
+@Import({
+    CommonCompromisedPasswordConfiguration.class,
+    PwnedPasswordsConfiguration.class
+})
 public class CompromisedPasswordConstraintConfiguration {
 
     /**
@@ -48,48 +52,5 @@ public class CompromisedPasswordConstraintConfiguration {
     public CompromisedPasswordConstraintValidator passwordConstraintValidator(PasswordCheckingService passwordCheckingService,
                                                                               @Value("${compromised.password.monitoring.only:true}") boolean monitoringOnly) {
         return new CompromisedPasswordConstraintValidator(passwordCheckingService);
-    }
-
-    /**
-     * Conditionally instantiates a Password Checking Service Spring Bean if one has not already been created. This is
-     * the centralised logic responsible for orchestrating the request to the external compromised password
-     * service, aggregating the result, and calculating the perceived password risk level from configuration.
-     *
-     * @param compromisedPasswordService An implementation that connects to an external datasource for checking
-     *                                   passwords for <strong>known</strong> compromise and returns the count
-     *                                   associated with their appearances in known data breaches.
-     * @param credentialSafetyConfig Configuration properties that set the thresholds for when a given password is marked as
-     *                               {@code PasswordRiskLevel.COMPROMISED} or
-     *                               {@code PasswordRiskLevel.SEVERELY_COMPROMISED}.
-     * @param passwordCheckRecorder Used to record the request flow and password check result
-     *                              (with no identifiable information) against some form of monitoring system.
-     * @return an instance of the core Password Checking Service
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public PasswordCheckingService passwordCheckingService(CompromisedPasswordService compromisedPasswordService,
-                                                           CompromisedPasswordThresholdConfigurationProperties credentialSafetyConfig,
-                                                           PasswordCheckRecorder passwordCheckRecorder) {
-        return new PasswordCheckingService(compromisedPasswordService, credentialSafetyConfig, passwordCheckRecorder);
-    }
-
-    /**
-     * Conditionally instantiates a Password Check Recorder Spring Bean if one has not already been created. This is to
-     * provide a simple zero operation implementation of the interface to ensure that monitoring functionality works correctly.
-     *
-     * @return a default implementation of the Password Check Recorder interface. This implementation does nothing when called.
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public PasswordCheckRecorder passwordCheckRecorder() {
-        return new PasswordCheckRecorder() {};
-    }
-
-
-    @Bean
-    @ConditionalOnMissingBean
-    @ConfigurationProperties("compromised.password.thresholds")
-    public CompromisedPasswordThresholdConfigurationProperties credentialSafetyConfig() {
-        return new CompromisedPasswordThresholdConfigurationProperties();
     }
 }
