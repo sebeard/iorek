@@ -26,10 +26,6 @@ package com.stuartbeard.iorek.sample.api.model;
 import com.stuartbeard.iorek.constraints.NotKnowinglyCompromised;
 import lombok.Data;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
 @Data
 public class SampleRequest {
 

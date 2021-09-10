@@ -99,7 +99,7 @@ public class SampleSteps {
 
     @Then("^the service does not notify me$")
     public void verifyNoOutOfBandNotification() {
-        assertThat(notificationService.getPasswordCheckResultByPrincipal()).hasSize(0);
+        assertThat(notificationService.getPasswordCheckResultByPrincipal()).isEmpty();
     }
 
     @Then("^the password for (authentication|in-band-sample) is recorded as (good|bad|terrible)$")

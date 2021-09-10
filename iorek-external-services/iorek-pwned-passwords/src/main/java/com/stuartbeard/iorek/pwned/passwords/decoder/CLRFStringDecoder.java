@@ -18,8 +18,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
-import static java.util.Arrays.asList;
-
 /**
  * Custom decoder class that accepts line return feed String based responses and returns a single String an
  * array of Strings, or a List of String.

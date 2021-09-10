@@ -35,8 +35,10 @@ class CompromisedPasswordNotificationServiceTest {
 
     @Test
     void shouldThrowUnsupportedExceptionByDefaultWhenSendingNotification() {
+        PasswordCheckResult passwordCheckResult = new PasswordCheckResult();
+
         UnsupportedOperationException exception = assertThrows(UnsupportedOperationException.class,
-            () -> compromisedPasswordNotificationService.sendNotification("principal", new PasswordCheckResult()));
+            () -> compromisedPasswordNotificationService.sendNotification("principal", passwordCheckResult));
 
         assertThat(exception.getMessage()).isEqualTo("Not implemented");
     }
