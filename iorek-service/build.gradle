@@ -1,20 +1,15 @@
 plugins {
-    id 'io.firefly.java-conventions'
+    id 'io.firefly.library-convention'
 }
 
 dependencies {
     compileOnly group: 'net.jcip', name: 'jcip-annotations', version: "${jcipAnnotationsVersion}"
-    compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: "${spotbugsAnnotationsVersion}"
 
-    implementation group: 'joda-time', name: 'joda-time', version: "${jodaVersion}"
-    implementation group: 'org.springframework', name: 'spring-beans', version: "${springFrameworkVersion}"
-    implementation group: 'org.springframework', name: 'spring-context', version: "${springFrameworkVersion}"
-    implementation group: 'org.springframework.boot', name: 'spring-boot', version: "${springBootVersion}"
+    implementation group: 'org.springframework', name: 'spring-beans'
+    implementation group: 'org.springframework', name: 'spring-context'
+    implementation group: 'org.springframework.boot', name: 'spring-boot'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: "${springBootVersion}"
 
-    testImplementation group: 'nl.jqno.equalsverifier', name: 'equalsverifier', version: "${equalsVerifierVersion}"
     testImplementation group: 'commons-codec', name: 'commons-codec', version: "${commonsCodecVersion}"
     testImplementation group: "org.apache.commons", name: "commons-lang3", version: "${commonsLang3Version}"
-    testImplementation group: 'org.force66', name: 'BeanTester', version: "${beantesterVersion}"
 }
-
-description = 'iorek-service'

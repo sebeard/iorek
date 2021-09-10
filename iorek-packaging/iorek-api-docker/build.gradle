@@ -1,9 +1,0 @@
-plugins {
-    id 'io.firefly.java-conventions'
-}
-
-dependencies {
-    api project(':iorek-api')
-}
-
-description = 'iorek-docker'

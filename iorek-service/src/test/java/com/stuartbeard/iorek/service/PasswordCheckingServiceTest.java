@@ -1,8 +1,14 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2019-2021 Stuart Beard
+ */
 package com.stuartbeard.iorek.service;
 
-import com.stuartbeard.iorek.service.config.CredentialSafetyConfig;
-import com.stuartbeard.iorek.service.config.ThresholdMessage;
-import com.stuartbeard.iorek.service.model.CredentialSafety;
+import com.stuartbeard.iorek.service.config.CompromisedPasswordThresholdConfigurationProperties;
+import com.stuartbeard.iorek.service.external.CompromisedPasswordService;
+import com.stuartbeard.iorek.service.model.PasswordCheckResult;
+import com.stuartbeard.iorek.service.model.PasswordRiskLevel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,9 +29,6 @@ import static org.mockito.Mockito.when;
 class PasswordCheckingServiceTest {
 
     private static final String PASSWORD = "password";
-    private static final String OK = "OK";
-    private static final String SEVERE = "SEVERE";
-    private static final String WARNING = "WARNING";
 
     @Mock
     private CompromisedPasswordService compromisedPasswordService;
@@ -44,20 +47,11 @@ class PasswordCheckingServiceTest {
         verifyNoMoreInteractions(compromisedPasswordService);
     }
 
-    private static ThresholdMessage thresholdMessage(int threshold, String message) {
-        ThresholdMessage thresholdMessage = new ThresholdMessage();
-        thresholdMessage.setMessage(message);
-        thresholdMessage.setThreshold(threshold);
-        return thresholdMessage;
-    }
-
     @BeforeEach
     void setupPasswordCheckingService() {
-        CredentialSafetyConfig safetyConfig = new CredentialSafetyConfig();
-        safetyConfig.setOk(thresholdMessage(0, OK));
-        safetyConfig.setWarning(thresholdMessage(1, WARNING));
-        safetyConfig.setSevere(thresholdMessage(2, SEVERE));
-        safetyConfig.setPreventSevere(true);
+        CompromisedPasswordThresholdConfigurationProperties safetyConfig = new CompromisedPasswordThresholdConfigurationProperties();
+        safetyConfig.setWarning(1);
+        safetyConfig.setSevere(2);
         passwordCheckingService = new PasswordCheckingService(compromisedPasswordService, safetyConfig);
     }
 
@@ -66,60 +60,34 @@ class PasswordCheckingServiceTest {
     void shouldReturnSafeAndAllowedCredentialSafetyWhenNotFoundInDataSet(String input, boolean sha1Hash) {
         when(compromisedPasswordService.getAppearanceCount(input, sha1Hash)).thenReturn(0);
 
-        CredentialSafety credentialSafety = passwordCheckingService.checkCredentialSafetyInfo(input, sha1Hash);
+        PasswordCheckResult passwordCheckResult = passwordCheckingService.checkPasswordForKnownCompromise("test", input, sha1Hash);
 
         verify(compromisedPasswordService).getAppearanceCount(input, sha1Hash);
-        assertThat(credentialSafety.getAppearancesInDataSet()).isZero();
-        assertThat(credentialSafety.getMessage()).isEqualTo(OK);
-        assertThat(credentialSafety.isPasswordAllowed()).isTrue();
-        assertThat(credentialSafety.isSafe()).isTrue();
+        assertThat(passwordCheckResult.getCompromisedCount()).isZero();
+        assertThat(passwordCheckResult.getRiskLevel()).isEqualTo(PasswordRiskLevel.OK);
     }
 
     @ParameterizedTest
     @MethodSource("inputs")
     void shouldReturnUnsafeAndButAllowedCredentialSafetyWhenFoundInDataSetWithinWarningThreshold(String input, boolean sha1Hash) {
-        when(compromisedPasswordService.getAppearanceCount(input, sha1Hash)).thenReturn(2);
+        when(compromisedPasswordService.getAppearanceCount(input, sha1Hash)).thenReturn(1);
 
-        CredentialSafety credentialSafety = passwordCheckingService.checkCredentialSafetyInfo(input, sha1Hash);
+        PasswordCheckResult passwordCheckResult = passwordCheckingService.checkPasswordForKnownCompromise("test", input, sha1Hash);
 
         verify(compromisedPasswordService).getAppearanceCount(input, sha1Hash);
-        assertThat(credentialSafety.getAppearancesInDataSet()).isEqualTo(2);
-        assertThat(credentialSafety.getMessage()).isEqualTo(WARNING);
-        assertThat(credentialSafety.isPasswordAllowed()).isTrue();
-        assertThat(credentialSafety.isSafe()).isFalse();
+        assertThat(passwordCheckResult.getCompromisedCount()).isEqualTo(1);
+        assertThat(passwordCheckResult.getRiskLevel()).isEqualTo(PasswordRiskLevel.COMPROMISED);
     }
 
     @ParameterizedTest
     @MethodSource("inputs")
     void shouldReturnUnsafeAndNotAllowedCredentialSafetyWhenFoundInDataSet(String input, boolean sha1Hash) {
-        when(compromisedPasswordService.getAppearanceCount(input, sha1Hash)).thenReturn(3);
+        when(compromisedPasswordService.getAppearanceCount(input, sha1Hash)).thenReturn(2);
 
-        CredentialSafety credentialSafety = passwordCheckingService.checkCredentialSafetyInfo(input, sha1Hash);
-
-        verify(compromisedPasswordService).getAppearanceCount(input, sha1Hash);
-        assertThat(credentialSafety.getAppearancesInDataSet()).isEqualTo(3);
-        assertThat(credentialSafety.getMessage()).isEqualTo(SEVERE);
-        assertThat(credentialSafety.isPasswordAllowed()).isFalse();
-        assertThat(credentialSafety.isSafe()).isFalse();
-    }
-
-    @ParameterizedTest
-    @MethodSource("inputs")
-    void shouldReturnUnsafeButAllowedCredentialSafetyWhenFoundInDataSetButPreventSevereIsOff(String input, boolean sha1Hash) {
-        CredentialSafetyConfig safetyConfig = new CredentialSafetyConfig();
-        safetyConfig.setOk(new ThresholdMessage().setMessage(OK));
-        safetyConfig.setWarning(new ThresholdMessage().setThreshold(1).setMessage(WARNING));
-        safetyConfig.setSevere(new ThresholdMessage().setThreshold(2).setMessage(SEVERE));
-        safetyConfig.setPreventSevere(false);
-        passwordCheckingService = new PasswordCheckingService(compromisedPasswordService, safetyConfig);
-        when(compromisedPasswordService.getAppearanceCount(input, sha1Hash)).thenReturn(3);
-
-        CredentialSafety credentialSafety = passwordCheckingService.checkCredentialSafetyInfo(input, sha1Hash);
+        PasswordCheckResult passwordCheckResult = passwordCheckingService.checkPasswordForKnownCompromise("test", input, sha1Hash);
 
         verify(compromisedPasswordService).getAppearanceCount(input, sha1Hash);
-        assertThat(credentialSafety.getAppearancesInDataSet()).isEqualTo(3);
-        assertThat(credentialSafety.getMessage()).isEqualTo(SEVERE);
-        assertThat(credentialSafety.isPasswordAllowed()).isTrue();
-        assertThat(credentialSafety.isSafe()).isFalse();
+        assertThat(passwordCheckResult.getCompromisedCount()).isEqualTo(2);
+        assertThat(passwordCheckResult.getRiskLevel()).isEqualTo(PasswordRiskLevel.SEVERELY_COMPROMISED);
     }
 }
