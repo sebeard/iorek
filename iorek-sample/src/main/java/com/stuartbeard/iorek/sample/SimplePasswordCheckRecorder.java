@@ -25,12 +25,10 @@ package com.stuartbeard.iorek.sample;
 
 import com.stuartbeard.iorek.service.model.PasswordCheckResult;
 import com.stuartbeard.iorek.service.recorder.PasswordCheckRecorder;
-import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
 public class SimplePasswordCheckRecorder implements PasswordCheckRecorder {
 
     private final Map<String, PasswordCheckResult> latestPasswordCheckResultByRequestFlow = new HashMap<>();
@@ -42,5 +40,9 @@ public class SimplePasswordCheckRecorder implements PasswordCheckRecorder {
 
     public void clearResults() {
         latestPasswordCheckResultByRequestFlow.clear();
+    }
+
+    public PasswordCheckResult getLatestPasswordCheckResult(String requestFlow) {
+        return latestPasswordCheckResultByRequestFlow.get(requestFlow);
     }
 }

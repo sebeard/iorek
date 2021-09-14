@@ -25,13 +25,11 @@ package com.stuartbeard.iorek.sample;
 
 import com.stuartbeard.iorek.notify.service.CompromisedPasswordNotificationService;
 import com.stuartbeard.iorek.service.model.PasswordCheckResult;
-import lombok.Getter;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
 public class SimpleCompromisedPasswordNotificationService implements CompromisedPasswordNotificationService {
 
     private final Map<Object, PasswordCheckResult> passwordCheckResultByPrincipal = new HashMap<>();
@@ -40,5 +38,9 @@ public class SimpleCompromisedPasswordNotificationService implements Compromised
     public void sendNotification(Object principal, PasswordCheckResult passwordCheckResult) {
         User user = (User) principal;
         passwordCheckResultByPrincipal.put(user.getUsername(), passwordCheckResult);
+    }
+
+    public PasswordCheckResult getPasswordCheckResult(String principal) {
+        return passwordCheckResultByPrincipal.get(principal);
     }
 }
