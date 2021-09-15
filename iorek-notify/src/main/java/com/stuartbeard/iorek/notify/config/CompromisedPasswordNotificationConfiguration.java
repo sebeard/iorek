@@ -7,15 +7,11 @@ package com.stuartbeard.iorek.notify.config;
 
 import com.stuartbeard.iorek.notify.event.CompromisedPasswordNotifier;
 import com.stuartbeard.iorek.notify.service.CompromisedPasswordNotificationService;
+import com.stuartbeard.iorek.pwned.passwords.config.PwnedPasswordsConfiguration;
 import com.stuartbeard.iorek.service.PasswordCheckingService;
 import com.stuartbeard.iorek.service.config.CommonCompromisedPasswordConfiguration;
-import com.stuartbeard.iorek.service.config.CompromisedPasswordThresholdConfigurationProperties;
-import com.stuartbeard.iorek.service.external.CompromisedPasswordService;
-import com.stuartbeard.iorek.service.recorder.PasswordCheckRecorder;
-import com.stuartbeard.iorek.pwned.passwords.config.PwnedPasswordsConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -40,11 +36,11 @@ public class CompromisedPasswordNotificationConfiguration {
      *
      * @param passwordCheckingService The centralised logic responsible for orchestrating the request to the external
      *                                compromised password service
-     * @param notificationService a notification mechanism that defines a single method for implementer to notify
-     *                            consumers about a compromised password out of band without impacting the user journey
-     * @param monitoringMode Provides a means to only monitor for compromised passwords to build up statistics and
-     *                       insights before turning on any notification mechanism. Allows implementors to show the
-     *                       Business Value Proposition.
+     * @param notificationService     a notification mechanism that defines a single method for implementer to notify
+     *                                consumers about a compromised password out of band without impacting the user journey
+     * @param monitoringMode          Provides a means to only monitor for compromised passwords to build up statistics and
+     *                                insights before turning on any notification mechanism. Allows implementors to show the
+     *                                Business Value Proposition.
      * @return an EventListener bean that monitors successful authentications, and uses the input (successful) password to check
      * for known password compromise. Reports metrics and notifies based on the implementations provided.
      */
@@ -66,6 +62,7 @@ public class CompromisedPasswordNotificationConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public CompromisedPasswordNotificationService compromisedPasswordNotificationService() {
-        return new CompromisedPasswordNotificationService() {};
+        return new CompromisedPasswordNotificationService() {
+        };
     }
 }

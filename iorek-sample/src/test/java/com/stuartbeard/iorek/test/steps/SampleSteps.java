@@ -91,7 +91,7 @@ public class SampleSteps {
                 fail("Unhandled password strength variable");
         }
         String principal = scenarioContext.get(FunctionalTestContextKey.PRINCIPAL);
-        PasswordCheckResult passwordCheckResult = notificationService.getPasswordCheckResultByPrincipal().get(principal);
+        PasswordCheckResult passwordCheckResult = notificationService.getPasswordCheckResult(principal);
         assertThat(passwordCheckResult)
             .isNotNull()
             .extracting(PasswordCheckResult::getRiskLevel).isEqualTo(expectedRiskLevel);
@@ -99,7 +99,8 @@ public class SampleSteps {
 
     @Then("^the service does not notify me$")
     public void verifyNoOutOfBandNotification() {
-        assertThat(notificationService.getPasswordCheckResultByPrincipal()).isEmpty();
+        String principal = scenarioContext.get(FunctionalTestContextKey.PRINCIPAL);
+        assertThat(notificationService.getPasswordCheckResult(principal)).isNull();
     }
 
     @Then("^the password for (authentication|in-band-sample) is recorded as (good|bad|terrible)$")
@@ -119,7 +120,7 @@ public class SampleSteps {
                 fail("Unhandled password strength variable");
         }
 
-        PasswordCheckResult passwordCheckResult = passwordCheckRecorder.getLatestPasswordCheckResultByRequestFlow().get(requestFlow);
+        PasswordCheckResult passwordCheckResult = passwordCheckRecorder.getLatestPasswordCheckResult(requestFlow);
         assertThat(passwordCheckResult)
             .isNotNull()
             .extracting(PasswordCheckResult::getRiskLevel).isEqualTo(expectedRiskLevel);
