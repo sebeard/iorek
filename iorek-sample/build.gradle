@@ -1,0 +1,21 @@
+plugins {
+    id 'io.firefly.library-convention'
+}
+
+dependencies {
+    api project(':iorek-notify')
+    api project(':iorek-constraints')
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: "${springBootVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${springBootVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: "${springBootVersion}"
+    implementation group: 'javax.el', name: 'javax.el-api', version: "${javaxElVersion}"
+
+    testImplementation group: 'commons-codec', name: 'commons-codec', version: "${commonsCodecVersion}"
+    testImplementation group: 'io.cucumber', name: 'cucumber-java8', version: "${cucumberVersion}"
+    testImplementation group: 'io.cucumber', name: 'cucumber-java', version: "${cucumberVersion}"
+    testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: "${cucumberVersion}"
+    testImplementation group: 'io.cucumber', name: 'cucumber-spring', version: "${cucumberVersion}"
+    testImplementation group: 'org.springframework', name: 'spring-web', version: "${springFrameworkVersion}"
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: "${springBootVersion}"
+}

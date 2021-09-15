@@ -1,0 +1,27 @@
+{
+  "categories": [
+    {
+      "title": "## 🚀 Features & Enhancements",
+      "labels": ["feature", "enhancement"]
+    },
+    {
+      "title": "## 🐛 Fixes",
+      "labels": ["fix", "bug"]
+    },
+    {
+      "title": "## 🧪 Tests",
+      "labels": ["test"]
+    },
+    {
+      "title": "## 💬 Other",
+      "labels": ["other"]
+    },
+    {
+      "title": "## 📦 Dependencies",
+      "labels": ["dependencies"]
+    }
+  ],
+  "tag_resolver": {
+    "method": "sort"
+  }
+}

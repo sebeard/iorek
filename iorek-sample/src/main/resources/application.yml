@@ -1,0 +1,5 @@
+spring.main.allow-bean-definition-overriding: true
+
+compromised.password:
+  thresholds.severe: 1000
+  monitoring.only: false

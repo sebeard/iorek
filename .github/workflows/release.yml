@@ -1,0 +1,54 @@
+name: Perform GitHub Release
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  SLACK_STATUS_CHANNEL: iorek-alerts
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  GITHUB_PACKAGES_USER: ${{ secrets.PACKAGES_USER }}
+  GITHUB_PACKAGES_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
+
+jobs:
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+
+      - name: Make Gradle Wrapper Executable
+        run: chmod +x gradlew
+
+      - name: Publish Release Artifacts
+        run: ./gradlew publish
+
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v1
+        with:
+          configuration: "changelog-config.json"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: ${{steps.github_release.outputs.changelog}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify Slack Finish
+        if: always()
+        uses: act10ns/slack@v1
+        with:
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}
+          channel: ${{ env.SLACK_STATUS_CHANNEL }}
