@@ -22,3 +22,7 @@ dependencies {
     testImplementation group: 'io.github.openfeign', name: 'feign-jackson'
     testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: "${commonsLang3Version}"
 }
+
+tasks.named("jacocoTestReport") {
+    enabled = true
+}

@@ -13,3 +13,7 @@ dependencies {
     testImplementation group: 'commons-codec', name: 'commons-codec', version: "${commonsCodecVersion}"
     testImplementation group: "org.apache.commons", name: "commons-lang3", version: "${commonsLang3Version}"
 }
+
+tasks.named("jacocoTestReport") {
+    enabled = true
+}

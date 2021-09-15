@@ -9,5 +9,28 @@ sonarqube {
         property "sonar.projectKey", "sebeard_iorek"
         property "sonar.organization", "sebeard"
         property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/aggregatedCodeCoverageReport/aggregatedCodeCoverageReport.xml"
     }
 }
+
+tasks.register("aggregatedCodeCoverageReport", JacocoReport) {
+    subprojects { subproject ->
+        subproject.plugins.withType(JacocoPlugin).configureEach {
+            subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).configureEach { testTask ->
+                sourceSets subproject.sourceSets.main
+                executionData(testTask)
+            }
+            subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).forEach {
+                rootProject.tasks.codeCoverageReport.dependsOn(it)
+            }
+        }
+    }
+
+    reports {
+        xml.enabled true
+        html.enabled true
+        csv.enabled false
+    }
+}
+tasks.test.finalizedBy aggregatedCodeCoverageReport
+tasks.check.dependsOn aggregatedCodeCoverageReport
