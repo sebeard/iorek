@@ -20,3 +20,7 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
 }
+
+tasks.named("jacocoTestReport") {
+    enabled = true
+}
