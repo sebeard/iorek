@@ -43,3 +43,7 @@ Release/
 *.opensdf
 *.unsuccessfulbuild
 ipch/
+
+#Gradle
+.gradle/
+build
