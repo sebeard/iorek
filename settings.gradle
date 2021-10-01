@@ -3,7 +3,7 @@ pluginManagement {
         mavenLocal()
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/sebeard/*")
+            url = uri("https://maven.pkg.github.com/sebeard/firefly-packages")
             credentials {
                 username = System.getenv("GITHUB_PACKAGES_USER")
                 password = System.getenv("GITHUB_PACKAGES_TOKEN")
@@ -16,6 +16,7 @@ pluginManagement {
     plugins {
         id 'io.firefly.project-convention' version "${fireflyConventionsVersion}"
         id 'io.firefly.library-convention' version "${fireflyConventionsVersion}"
+        id 'io.firefly.oss-publishing-convention' version "${fireflyConventionsVersion}"
     }
 }
 
