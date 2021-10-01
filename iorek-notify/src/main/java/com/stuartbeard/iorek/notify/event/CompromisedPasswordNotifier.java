@@ -42,10 +42,9 @@ public final class CompromisedPasswordNotifier {
      * (based solely on the {@link UsernamePasswordAuthenticationToken} authentication object).It then uses that
      * password to perform a check against the external password checking service via the centralised logic.
      * Having checked the password for compromise and retrieved the result the handler either ;
-     * <li>
-     *     <ul>returns without doing anything further - monitoring only mode</ul>
-     *     <ul>if the password is anything other than {@link PasswordRiskLevel#OK} triggers a notification using the principal and includes the result of the check</ul>
-     * </li>
+     *  - returns without doing anything further - monitoring only mode
+     *  - if the password is anything other than {@link PasswordRiskLevel#OK} triggers a notification using the principal and includes the result of the check
+     *
      * <p>
      * Finally the credential is erased to ensure it is not discoverable in the code elsewhere.
      *
