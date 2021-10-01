@@ -102,6 +102,9 @@ jobs:
           echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
 
       - name: Run Clean Build
+        env:
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_KEY_PASSPHRASE: ${{ secrets.SIGNING_KEY_PASSPHRASE }}
         run: ./gradlew clean build
 
       - name: Run OWASP Dependency Check
