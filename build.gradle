@@ -5,7 +5,7 @@ plugins {
 evaluationDependsOnChildren()
 
 allprojects {
-    group = 'com.stuartbeard.iorek'
+    project.group = 'com.stuartbeard.iorek'
 }
 
 sonarqube {
