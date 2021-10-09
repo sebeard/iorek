@@ -1,5 +1,6 @@
 plugins {
     id 'io.firefly.library-convention'
+    id 'io.firefly.oss-publishing-convention'
 }
 
 dependencies {
@@ -25,4 +26,34 @@ dependencies {
 
 tasks.named("jacocoTestReport") {
     enabled = true
+}
+
+publishing {
+    publications {
+        gpr(MavenPublication) {
+            pom {
+                name = 'Iorek'
+                description = 'Set of Spring Boot Libraries for checking public (or private) breached credential data to determine if a password is appropriately secure for usage'
+                url = 'https://github.com/sebeard/iorek/'
+                licenses {
+                    license {
+                        name = 'The MIT License (MIT)'
+                        url = 'https://mit-license.org'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'sebeard'
+                        name = 'Stuart Beard'
+                        email = 'stuart@stuartbeard.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://git@github.com:sebeard/iorek.git'
+                    developerConnection = 'scm:git:ssh://git@github.com:sebeard/iorek.git'
+                    url = 'https://github.com/sebeard/iorek/'
+                }
+            }
+        }
+    }
 }

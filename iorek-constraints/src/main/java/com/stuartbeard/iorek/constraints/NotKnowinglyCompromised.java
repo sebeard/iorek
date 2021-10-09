@@ -43,24 +43,13 @@ public @interface NotKnowinglyCompromised {
     /**
      * Provides the maximum level of acceptable risk for a given API Request Object. Setting this will have the
      * following consequences;
-     * <br />
-     * <ul>
-     *     <li>
-     *         {@link PasswordRiskLevel#OK} - Allow all passwords that have been compromised less than the warning
-     *         threshold defined in
-     *         {@link com.stuartbeard.iorek.service.config.CompromisedPasswordThresholdConfigurationProperties}
-     *     </li>
-     *     <li>
-     *         {@link PasswordRiskLevel#COMPROMISED} - Allow all passwords that have been compromised less than the severe
-     *         threshold defined in
-     *         {@link com.stuartbeard.iorek.service.config.CompromisedPasswordThresholdConfigurationProperties}
-     *     </li>
-     *     <li>
-     *         {@link PasswordRiskLevel#SEVERELY_COMPROMISED} - Allow all passwords to be used (...what's the point
-     *         in using this library then?)
-     *         {@link com.stuartbeard.iorek.service.config.CompromisedPasswordThresholdConfigurationProperties}
-     *     </li>
-     * </ul>
+     *
+     * - {@link PasswordRiskLevel#OK} - Allow all passwords that have been compromised less than the warning threshold
+     * defined in {@link com.stuartbeard.iorek.service.config.CompromisedPasswordThresholdConfigurationProperties}
+     * - {@link PasswordRiskLevel#COMPROMISED} - Allow all passwords that have been compromised less than the severe
+     * threshold defined in {@link com.stuartbeard.iorek.service.config.CompromisedPasswordThresholdConfigurationProperties}
+     * - {@link PasswordRiskLevel#SEVERELY_COMPROMISED} - Allow all passwords to be used (...what's the point in using
+     * this library then?) {@link com.stuartbeard.iorek.service.config.CompromisedPasswordThresholdConfigurationProperties}
      *
      * @return the level of <strong>acceptable</strong> risk request flow defined by the specific API Request Model
      * class if set. The default is {@link PasswordRiskLevel#COMPROMISED} so that by default there is a perceived

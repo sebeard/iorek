@@ -4,6 +4,10 @@ plugins {
 
 evaluationDependsOnChildren()
 
+allprojects {
+    group = 'com.stuartbeard.iorek'
+}
+
 sonarqube {
     properties {
         property "sonar.projectKey", "sebeard_iorek"
@@ -13,6 +17,7 @@ sonarqube {
     }
 }
 
+// Workaround until Gradle get act together with aggregated JaCoCo reporting
 tasks.register("aggregatedCodeCoverageReport", JacocoReport) {
     subprojects { subproject ->
         subproject.plugins.withType(JacocoPlugin).configureEach {
@@ -32,5 +37,6 @@ tasks.register("aggregatedCodeCoverageReport", JacocoReport) {
         csv.enabled false
     }
 }
+
 tasks.test.finalizedBy aggregatedCodeCoverageReport
 tasks.check.dependsOn aggregatedCodeCoverageReport
