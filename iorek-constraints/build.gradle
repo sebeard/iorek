@@ -29,6 +29,7 @@ tasks.named("jacocoTestReport") {
 publishing {
     publications {
         gpr(MavenPublication) {
+            groupId 'com.stuartbeard.iorek'
             pom {
                 name = 'Iorek'
                 description = 'Set of Spring Boot Libraries for checking public (or private) breached credential data to determine if a password is appropriately secure for usage'

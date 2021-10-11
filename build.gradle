@@ -4,10 +4,6 @@ plugins {
 
 evaluationDependsOnChildren()
 
-allprojects {
-    project.group = 'com.stuartbeard.iorek'
-}
-
 sonarqube {
     properties {
         property "sonar.projectKey", "sebeard_iorek"
