@@ -31,7 +31,7 @@ jobs:
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           SIGNING_KEY_PASSPHRASE: ${{ secrets.SIGNING_KEY_PASSPHRASE }}
-        run: ./gradlew publish
+        run: ./gradlew sign publish
 
       - name: Build Changelog
         id: github_release
