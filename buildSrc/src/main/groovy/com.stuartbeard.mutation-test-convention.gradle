@@ -1,0 +1,14 @@
+plugins {
+    id 'info.solidsoft.pitest'
+    id 'java'
+}
+
+pitest {
+    junit5PluginVersion.set("${pitestJUnit5PluginVersion}")
+    threads.set(4)
+    outputFormats.set(['XML', 'HTML'])
+    timestampedReports.set(false)
+    avoidCallsTo.set(['org.slf4j'])
+    failWhenNoMutations.set(false)
+    timeoutConstInMillis.set(15000) //  increase the default timeout to avoid mutation tests failing with TIMED_OUT
+}

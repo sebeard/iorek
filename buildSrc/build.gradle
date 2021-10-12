@@ -1,0 +1,41 @@
+plugins {
+    id 'groovy-gradle-plugin'
+    id 'org.owasp.dependencycheck'
+    id 'com.github.ben-manes.versions'
+}
+
+repositories {
+    gradlePluginPortal()
+}
+
+dependencies {
+    implementation group: 'com.github.ben-manes.versions', name: 'com.github.ben-manes.versions.gradle.plugin', version: "${versionsPluginVersion}"
+    implementation group: 'com.github.spotbugs', name: 'com.github.spotbugs.gradle.plugin', version: "${spotbugsPluginVersion}"
+    implementation group: 'gradle.plugin.com.hierynomus.gradle.plugins', name: 'license-gradle-plugin', version: "${licensePluginVersion}"
+    implementation group: 'gradle.plugin.com.github.jmongard.git-semver-plugin', name: 'git-semver-plugin', version: "${semanticVersioningPluginVersion}"
+    implementation group: 'info.solidsoft.pitest', name: 'info.solidsoft.pitest.gradle.plugin', version: "${pitestPluginVersion}"
+    implementation group: 'org.owasp.dependencycheck', name: 'org.owasp.dependencycheck.gradle.plugin', version: "${dependencyCheckPluginVersion}"
+    implementation group: 'org.sonarqube', name: 'org.sonarqube.gradle.plugin', version: "${sonarqubePluginVersion}"
+}
+
+dependencyCheck {
+    failOnError = false
+    format = 'ALL'
+    cveValidForHours = 4
+    suppressionFile = "$project.rootDir/suppressions.xml"
+}
+check.dependsOn dependencyCheckAggregate
+
+def isNonStable = { String version ->
+    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { it -> version.toUpperCase().contains(it) }
+    def regex = /^[0-9,.v-]+(-r)?$/
+    return !stableKeyword && !(version ==~ regex)
+}
+
+tasks.named("dependencyUpdates").configure {
+    rejectVersionIf {
+        isNonStable(it.candidate.version)
+    }
+    checkConstraints = true
+}
+build.dependsOn dependencyUpdates

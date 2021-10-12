@@ -1,0 +1,20 @@
+plugins {
+    id 'com.stuartbeard.java-convention'
+    id 'com.stuartbeard.sonarqube-convention'
+    id 'com.stuartbeard.dependency-check'
+    id 'com.stuartbeard.jacoco-aggregation'
+    id 'com.github.jmongard.git-semver-plugin'
+}
+
+semver {
+    releaseTagNameFormat = "v%s"
+}
+
+allprojects {
+    version semver.version
+}
+
+tasks.test.finalizedBy codeCoverageReport
+tasks["sonarqube"].mustRunAfter codeCoverageReport
+tasks["sonarqube"].dependsOn dependencyCheckAggregate
+//tasks["sonarqube"].dependsOn subprojects.tasks["pitest"]

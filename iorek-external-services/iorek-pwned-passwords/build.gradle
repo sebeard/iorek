@@ -1,6 +1,5 @@
 plugins {
-    id 'io.firefly.library-convention'
-    id 'io.firefly.oss-publishing-convention'
+    id 'com.stuartbeard.library-convention'
 }
 
 dependencies {
@@ -10,17 +9,17 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: "${jacksonVersion}"
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: "${jacksonVersion}"
     implementation group: 'io.github.openfeign', name: 'feign-annotation-error-decoder', version: "${feignVersion}"
-    implementation group: 'io.github.openfeign', name: 'feign-core'
-    implementation group: 'io.github.openfeign', name: 'feign-jackson'
-    implementation group: 'io.github.openfeign', name: 'feign-okhttp'
-    implementation group: 'io.github.openfeign', name: 'feign-slf4j'
-    implementation group: 'org.springframework', name: 'spring-beans'
-    implementation group: 'org.springframework', name: 'spring-context'
+    implementation group: 'io.github.openfeign', name: 'feign-core', version: "${feignVersion}"
+    implementation group: 'io.github.openfeign', name: 'feign-jackson', version: "${feignVersion}"
+    implementation group: 'io.github.openfeign', name: 'feign-okhttp', version: "${feignVersion}"
+    implementation group: 'io.github.openfeign', name: 'feign-slf4j', version: "${feignVersion}"
+    implementation group: 'org.springframework', name: 'spring-beans', version: "${springFrameworkVersion}"
+    implementation group: 'org.springframework', name: 'spring-context', version: "${springFrameworkVersion}"
     implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: "${springBootVersion}"
 
     testImplementation group: 'com.squareup.okhttp3', name: 'mockwebserver', version: "${okhttpVersion}"
     testImplementation group: 'com.squareup.okhttp3', name: 'okhttp', version: "${okhttpVersion}"
-    testImplementation group: 'io.github.openfeign', name: 'feign-jackson'
+    testImplementation group: 'io.github.openfeign', name: 'feign-jackson', version: "${feignVersion}"
     testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: "${commonsLang3Version}"
 }
 
