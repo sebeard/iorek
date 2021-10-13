@@ -1,5 +1,6 @@
 plugins {
     id 'com.stuartbeard.library-convention'
+    id 'com.stuartbeard.publishing-convention'
 }
 
 dependencies {

@@ -4,6 +4,14 @@ plugins {
 }
 
 publishing {
+    publications {
+        gpr(MavenPublication) {
+            groupId project.group
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
     repositories {
         maven {
             url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
@@ -14,6 +22,8 @@ publishing {
         }
     }
 }
+
+
 
 signing {
     def signingKey = findProperty("SIGNING_KEY") ?: System.getenv("SIGNING_KEY")
@@ -28,6 +38,5 @@ signing {
         }
     }
     sign publishing.publications
-
 }
 

@@ -2,7 +2,6 @@ plugins {
     id 'java-library'
     id 'com.stuartbeard.java-convention'
     id 'com.stuartbeard.jacoco-convention'
-    id 'com.stuartbeard.publishing-convention'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -23,15 +22,4 @@ javadoc {
 
 artifacts {
     archives javadocJar, sourcesJar
-}
-
-publishing {
-    publications {
-        gpr(MavenPublication) {
-            groupId project.group
-            from components.java
-            artifact sourcesJar
-            artifact javadocJar
-        }
-    }
 }
