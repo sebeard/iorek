@@ -1,5 +1,5 @@
 plugins {
-    id 'io.firefly.project-convention'
+    id 'com.stuartbeard.project-convention'
 }
 
 evaluationDependsOnChildren()
@@ -40,3 +40,4 @@ tasks.register("aggregatedCodeCoverageReport", JacocoReport) {
 
 tasks.test.finalizedBy aggregatedCodeCoverageReport
 tasks.check.dependsOn aggregatedCodeCoverageReport
+//rootProject.tasks["sonarqube"].dependsOn subprojects.tasks["pitest"]

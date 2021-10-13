@@ -1,0 +1,16 @@
+plugins {
+    id 'com.github.hierynomus.license'
+}
+
+license {
+    // TODO: Move to LICENCE file and provide default file
+    header rootProject.file('COPYRIGHT')
+    strictCheck true
+    skipExistingHeaders true
+    excludes(['**/*.properties', '**/*.yml', '**/*.yaml', '**/*.json', '**/*.feature'])
+    ext.year = Calendar.getInstance().get(Calendar.YEAR)
+    mapping {
+        java = 'SLASHSTAR_STYLE'
+        xml = 'XML_STYLE'
+    }
+}

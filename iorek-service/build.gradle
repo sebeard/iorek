@@ -1,6 +1,5 @@
 plugins {
-    id 'io.firefly.library-convention'
-    id 'io.firefly.oss-publishing-convention'
+    id 'com.stuartbeard.library-convention'
 }
 
 dependencies {

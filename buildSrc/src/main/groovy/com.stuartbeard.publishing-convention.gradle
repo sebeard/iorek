@@ -1,0 +1,33 @@
+plugins {
+    id 'maven-publish'
+    id 'signing'
+}
+
+publishing {
+    repositories {
+        maven {
+            url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
+            credentials {
+                username = project.findProperty("OSSRH_USERNAME") ?: System.getenv("OSSRH_USERNAME")
+                password = project.findProperty("OSSRH_PASSWORD") ?: System.getenv("OSSRH_PASSWORD")
+            }
+        }
+    }
+}
+
+signing {
+    def signingKey = findProperty("SIGNING_KEY") ?: System.getenv("SIGNING_KEY")
+    def signingPassword = findProperty("SIGNING_KEY_PASSPHRASE") ?: System.getenv("SIGNING_KEY_PASSPHRASE")
+
+    useInMemoryPgpKeys(signingKey, signingPassword)
+
+    required {
+        // signing is required if this is a release version and the artifacts are to be published
+        !version.toString().endsWith('-SNAPSHOT') && tasks.withType(PublishToMavenRepository).find {
+            gradle.taskGraph.hasTask it
+        }
+    }
+    sign publishing.publications
+
+}
+

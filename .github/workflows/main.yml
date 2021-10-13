@@ -101,23 +101,13 @@ jobs:
           # enable workflow command processing
           echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
 
-      - name: Run Clean Build
+      - name: Verify, Build and Push to Sonarqube
         env:
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           SIGNING_KEY_PASSPHRASE: ${{ secrets.SIGNING_KEY_PASSPHRASE }}
-        run: ./gradlew clean build
-
-      - name: Run OWASP Dependency Check
-        run: ./gradlew dependencyCheckAggregate
-
-      - name: Run Mutation Test
-        run: ./gradlew pitest
-
-      - name: Perform Sonarqube Checks
-        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonarqube
+        run: ./gradlew clean check build pitest sonarqube
 
       - name: Upload Reports
         uses: actions/upload-artifact@v1
