@@ -38,4 +38,4 @@ tasks.named("dependencyUpdates").configure {
     }
     checkConstraints = true
 }
-build.dependsOn dependencyUpdates
+check.dependsOn dependencyUpdates

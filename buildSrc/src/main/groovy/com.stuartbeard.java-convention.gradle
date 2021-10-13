@@ -83,6 +83,6 @@ spotbugsTest {
     }
 }
 
-
+tasks.build.dependsOn dependencyUpdates
 configurations.implementation.setCanBeResolved(true)
 configurations.testImplementation.setCanBeResolved(true)
