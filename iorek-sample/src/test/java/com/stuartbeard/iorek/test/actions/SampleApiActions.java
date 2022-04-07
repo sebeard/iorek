@@ -42,6 +42,13 @@ public class SampleApiActions {
 
     private final TestRestTemplate testRestTemplate;
 
+    public ResponseEntity<String> inBandRequest(String username, String password) {
+        SampleRequest sampleRequestHttpEntity = new SampleRequest();
+        sampleRequestHttpEntity.setUsername(username);
+        sampleRequestHttpEntity.setPassword(password);
+        return testRestTemplate.exchange(IN_BAND_ENDPOINT, HttpMethod.POST, new HttpEntity<>(sampleRequestHttpEntity), String.class);
+    }
+
     public ResponseEntity<String> inBandRequest(String password) {
         SampleRequest sampleRequestHttpEntity = new SampleRequest();
         sampleRequestHttpEntity.setPassword(password);

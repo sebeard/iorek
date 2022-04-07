@@ -24,10 +24,14 @@
 package com.stuartbeard.iorek.sample.api.model;
 
 import com.stuartbeard.iorek.constraints.NotKnowinglyCompromised;
+import com.stuartbeard.iorek.constraints.PasswordDoesNotContainUsername;
 import lombok.Data;
 
 @Data
+@PasswordDoesNotContainUsername(message = "The password provided contains the username and cannot be used.")
 public class SampleRequest {
+
+    private String username;
 
     @NotKnowinglyCompromised(message = "The password provided for {requestFlow} was too severely compromised and cannot be used.", requestFlow = "in-band-sample")
     private String password;
