@@ -5,7 +5,7 @@
  */
 package com.stuartbeard.iorek.constraints.validation;
 
-
+import com.stuartbeard.iorek.constraints.config.CompromisedPasswordMonitoringProperties;
 import com.stuartbeard.iorek.service.PasswordCheckingService;
 import com.stuartbeard.iorek.service.model.PasswordCheckResult;
 import com.stuartbeard.iorek.service.model.PasswordRiskLevel;
@@ -31,7 +31,7 @@ public class CompromisedPasswordConstraintValidator implements ConstraintValidat
     private static final String DEFAULT_REQUEST_FLOW = "Unknown";
 
     private final PasswordCheckingService passwordCheckingService;
-    private boolean monitoringOnly = false;
+    private final CompromisedPasswordMonitoringProperties monitoringProperties;
 
     private String message = DEFAULT_MESSAGE;
     private String requestFlow = DEFAULT_REQUEST_FLOW;
@@ -71,7 +71,7 @@ public class CompromisedPasswordConstraintValidator implements ConstraintValidat
         // If the intent is to just capture the input and monitor password risk levels (based on configuration) without
         // impacting the UX of the client then after checking the password for known compromise we can simply just
         // return as valid.
-        if (monitoringOnly) {
+        if (monitoringProperties.isOnly()) {
             return true;
         }
 

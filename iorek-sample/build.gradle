@@ -13,11 +13,13 @@ dependencies {
 
     testImplementation group: 'commons-codec', name: 'commons-codec', version: "${commonsCodecVersion}"
     testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: "${commonsLang3Version}"
-    testImplementation group: 'io.cucumber', name: 'cucumber-java8', version: "${cucumberVersion}"
+    testImplementation group: 'io.cucumber', name: 'cucumber-core', version: "${cucumberVersion}"
     testImplementation group: 'io.cucumber', name: 'cucumber-java', version: "${cucumberVersion}"
     testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: "${cucumberVersion}"
     testImplementation group: 'io.cucumber', name: 'cucumber-spring', version: "${cucumberVersion}"
     testImplementation group: 'org.springframework', name: 'spring-web', version: "${springFrameworkVersion}"
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: "${springBootVersion}"
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: "${mockitoVersion}"
+
+    testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: "${junitJupiterVersion}"
 }

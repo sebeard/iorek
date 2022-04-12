@@ -28,8 +28,8 @@ import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "src/test/resources/features",
+@CucumberOptions(features = "classpath:features",
     plugin = {"pretty"},
-    tags = "not @wip",
+    tags = "not @WIP",
     glue = {"com.stuartbeard.iorek.test"})
 public class FunctionalTest {}

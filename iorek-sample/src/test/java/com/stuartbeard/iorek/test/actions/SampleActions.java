@@ -31,12 +31,24 @@ import org.springframework.http.ResponseEntity;
 @RequiredArgsConstructor
 public class SampleActions {
 
+    private static final String USERNAME = "someUsernameSample";
     private static final String GOOD_PASSWORD = "thisIsAnAwesomelySecurePasswordThatHasNotBeenCompromisedKnowinglyYet";
     private static final String BAD_PASSWORD = "oreoCookie1";
     private static final String TERRIBLE_PASSWORD = "password";
 
     private final SampleApiActions sampleApiActions;
     private final ScenarioContext scenarioContext;
+
+    public void usernameInPasswordAlert(boolean usernameInPassword) {
+        ResponseEntity<String> response;
+        if(usernameInPassword) {
+            response = sampleApiActions.inBandRequest(USERNAME, GOOD_PASSWORD + USERNAME);
+        } else {
+            response = sampleApiActions.inBandRequest(USERNAME, GOOD_PASSWORD);
+        }
+        scenarioContext.put(FunctionalTestContextKey.RESPONSE_CODE, response.getStatusCode());
+        scenarioContext.put(FunctionalTestContextKey.RESPONSE, response.getBody());
+    }
 
     public void inBandAlert(String passwordStrength) {
         ResponseEntity<String> response;

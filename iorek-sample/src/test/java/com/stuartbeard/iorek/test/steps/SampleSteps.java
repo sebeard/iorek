@@ -35,6 +35,7 @@ import io.cucumber.java.en.When;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -45,6 +46,11 @@ public class SampleSteps {
     private final SampleActions sampleActions;
     private final SimpleCompromisedPasswordNotificationService notificationService;
     private final SimplePasswordCheckRecorder passwordCheckRecorder;
+
+    @When("^I call the service with a username that is (not )?in the password in the payload$")
+    public void usernameNotInPassword(String usernameNotInPassword) {
+        sampleActions.usernameInPasswordAlert(isBlank(usernameNotInPassword));
+    }
 
     @When("^I call the service with a known (good|bad|terrible) password in the payload$")
     public void inBandAlert(String passwordStrength) {
@@ -61,10 +67,10 @@ public class SampleSteps {
         HttpStatus status = scenarioContext.get(FunctionalTestContextKey.RESPONSE_CODE);
         switch (acceptsRejects) {
             case "accepts":
-                assertThat(status.is2xxSuccessful()).isTrue();
+                assertThat(status).isEqualTo(HttpStatus.OK);
                 break;
             case "rejects":
-                assertThat(status.is4xxClientError()).isTrue();
+                assertThat(status).isEqualTo(HttpStatus.BAD_REQUEST);
                 break;
             default:
                 fail("Unhandled expected status: " + acceptsRejects);
