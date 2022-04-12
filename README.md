@@ -121,13 +121,13 @@ The following properties are available to be set in either your `application.yml
 A full example configuration with defaults is provided at the bottom of this section
 
 #### Service
-- `compromised.password.service` determines which integration to use. Defauls automatically to "pwnedpassword" if not supplied.
+- `compromised.password.service` determines which integration to use. Defaults automatically to "pwnedpassword" if not supplied.
 
 #### Pwned Passwords Configuration
 - `compromised.password.pwnedpasswords.url` The API base URL to the Pwned Passwords API. At the time of writing this is
 `https://api.pwnedpasswords.com` which is the default.
 - `compromised.password.pwnedpasswords.prefix.length` This is the required prefix length of the SHA-1 Hash provided to
-the Pwned Passwords API for k-anonymitiy. Currently the requirement is for the first 5 characters of the hash, so this
+the Pwned Passwords API for k-anonymity. Currently, the requirement is for the first 5 characters of the hash, so this
 defaults to `5` if not provided.
 
 #### Threshold Configuration
