@@ -110,7 +110,7 @@ jobs:
         run: ./gradlew clean check build pitest sonarqube
 
       - name: Upload Reports
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: reports
