@@ -24,9 +24,11 @@
 package com.stuartbeard.iorek.constraints.validation;
 
 import com.stuartbeard.iorek.constraints.NotKnowinglyCompromised;
+import com.stuartbeard.iorek.constraints.config.CompromisedPasswordMonitoringProperties;
 import com.stuartbeard.iorek.service.PasswordCheckingService;
 import com.stuartbeard.iorek.service.model.PasswordCheckResult;
 import com.stuartbeard.iorek.service.model.PasswordRiskLevel;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -45,8 +47,16 @@ class CompromisedPasswordConstraintValidatorTest {
     @Mock
     private PasswordCheckingService passwordCheckingService;
 
+    @Mock
+    private CompromisedPasswordMonitoringProperties compromisedPasswordMonitoringProperties;
+
     @InjectMocks
     private CompromisedPasswordConstraintValidator compromisedPasswordConstraintValidator;
+
+    @BeforeEach
+    void mockMonitoringOnlyModeOff() {
+        when(compromisedPasswordMonitoringProperties.isOnly()).thenReturn(false);
+    }
 
     @Test
     void shouldFailValidationWithAnnotationCustomisationsForCompromisedPassword() {
@@ -82,6 +92,16 @@ class CompromisedPasswordConstraintValidatorTest {
         boolean isValid = compromisedPasswordConstraintValidator.isValid("password", validatorContext);
 
         assertThat(isValid).isFalse();
+    }
+
+    @Test
+    void shouldAlwaysPassValidationWhenInMonitoringOnlyMode() {
+        when(compromisedPasswordMonitoringProperties.isOnly()).thenReturn(true);
+        ConstraintValidatorContext validatorContext = mock(ConstraintValidatorContext.class);
+
+        boolean isValid = compromisedPasswordConstraintValidator.isValid("password", validatorContext);
+
+        assertThat(isValid).isTrue();
     }
 
     @Test
