@@ -45,14 +45,14 @@ jobs:
           git fetch --tags --prune
 
       - name: Cache SonarCloud packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar-${{ github.sha }}
           restore-keys: ${{ runner.os }}-sonar-${{ github.sha }}
 
       - name: Cache/Restore Gradle Data
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
