@@ -5,9 +5,7 @@
  */
 package com.stuartbeard.iorek.constraints;
 
-import com.stuartbeard.iorek.constraints.validation.CompromisedPasswordConstraintValidator;
 import com.stuartbeard.iorek.constraints.validation.UsernamePasswordConstraintValidator;
-import com.stuartbeard.iorek.service.model.PasswordRiskLevel;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
