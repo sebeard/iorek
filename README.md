@@ -1,6 +1,6 @@
 # Iorek
 
-![Maven Central](https://img.shields.io/maven-central/v/com.stuartbeard.iorek/iorek-constraints)  ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/sebeard/iorek) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sebeard_iorek&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sebeard_iorek) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=sebeard_iorek&metric=coverage)](https://sonarcloud.io/summary/new_code?id=sebeard_iorek) ![GitHub](https://img.shields.io/github/license/sebeard/iorek)
+![Maven Central](https://img.shields.io/maven-central/v/com.stuartbeard.iorek/iorek-constraints) ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/sebeard/iorek) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sebeard_iorek&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sebeard_iorek) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=sebeard_iorek&metric=coverage)](https://sonarcloud.io/summary/new_code?id=sebeard_iorek) ![GitHub](https://img.shields.io/github/license/sebeard/iorek) ![GitHub Sponsors](https://img.shields.io/github/sponsors/sebeard)
 
 Iorek is a small set of Spring Boot libraries designed to provide compromised password checking functionality through
 fairly minimal configuration and effort.
