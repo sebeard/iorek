@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: Notify Slack Start
-        uses: act10ns/slack@v1.5.1
+        uses: act10ns/slack@v1.6.0
         if: always()
         with:
           status: starting
@@ -140,7 +140,7 @@ jobs:
 
       - name: Notify Slack Finish
         if: always()
-        uses: act10ns/slack@v1.5.1
+        uses: act10ns/slack@v1.6.0
         with:
           status: ${{ job.status }}
           steps: ${{ toJson(steps) }}
